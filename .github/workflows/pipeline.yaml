@@ -24,20 +24,12 @@ jobs:
           CI: true
   
   
-  securityCheck:
-    name: Security Check
+  test:
+    name: Test
     runs-on: ubuntu-latest
     steps:
-      - name: Check for Security
+      - name: Test
         run: |
-          echo "Running Security Checks..."
+          echo "Running Test Suit..."
+          npm run test
   
-  
-  deploy:
-    name: Deployment
-    runs-on: ubuntu-latest
-    needs: [lintTest, securityCheck]
-    steps:
-      - name: Deployment
-        run: |
-          echo "Running Deploy..."

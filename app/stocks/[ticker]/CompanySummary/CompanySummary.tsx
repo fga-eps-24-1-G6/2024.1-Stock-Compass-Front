@@ -1,5 +1,5 @@
-import { IconBadge, badgeVariant } from "../IconBadge/IconBadge";
-import { Card } from "../ui/card";
+import { IconBadge, badgeVariant } from "../../../../components/IconBadge/IconBadge";
+import { Card } from "../../../../components/ui/card";
 
 async function getCompanySummary(ticker: string) {
     return [

@@ -12,6 +12,7 @@ import { MoveDown, MoveUp } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
 import { Loading as CompanySummaryLoading } from "./CompanySummary/Loading";
+import IndicatorsSummary from "./IndicatorsSummary/IndicatorsSummary";
 
 function SectionCard({ children, id }: { children: React.ReactNode, id?: string }) {
     return (
@@ -181,8 +182,8 @@ export default async function StockPage({ params }: any) {
                     <CardTitle>Indicadores</CardTitle>
                     <CardDescription>Card Description</CardDescription>
                 </CardHeader>
-                <CardContent>
-                    <p>Card Content</p>
+                <CardContent className="grid grid-cols-1 md:grid-cols-5 gap-4">
+                <IndicatorsSummary ticker={params.ticker}></IndicatorsSummary>
                 </CardContent>
             </SectionCard>
 

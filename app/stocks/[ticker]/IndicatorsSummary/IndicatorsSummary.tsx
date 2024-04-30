@@ -95,7 +95,12 @@ export default async function IndicatorsSummary({
       key={index + item.indicator}
       className="flex flex-col p-4 gap-12 rounded-2xl"
     >
+      <div className="flex flex-row">
       <h1 className="text-sm font-semibold ">{item.indicator}</h1>
+      <div className="w-full flex justify-end">
+      <IconBadge variant={'question' as badgeVariant} />
+      </div>
+      </div>
       <p className="text-teal-400 w-full flex justify-end">{item.value}</p>
     </Card>
   ));

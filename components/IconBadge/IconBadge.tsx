@@ -1,6 +1,7 @@
-import { BriefcaseBusiness, Calendar, Check, DollarSign, Newspaper } from "lucide-react";
+import { BriefcaseBusiness, Calendar, Check, DollarSign, Newspaper, CircleHelp } from "lucide-react";
 
-export type badgeVariant = 'check' | 'note' | 'calendar' | 'money' | 'business';
+
+export type badgeVariant = 'check' | 'note' | 'calendar' | 'money' | 'business' | 'question';
 
 const variants = {
     'check': {
@@ -23,6 +24,10 @@ const variants = {
         bgColor: 'bg-fuchsia-600',
         icon: <BriefcaseBusiness className="w-4 h-4 text-fuchsia-400" />
     },
+    'question': {
+        bgColor: null,
+        icon: <CircleHelp className="w-4 h-4" />
+    }
 }
 
 export function IconBadge({ variant }: { variant: badgeVariant }) {

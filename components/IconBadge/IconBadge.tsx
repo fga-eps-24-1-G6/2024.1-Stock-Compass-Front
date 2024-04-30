@@ -26,7 +26,7 @@ const variants = {
     },
     'question': {
         bgColor: null,
-        icon: <CircleHelp className="w-4 h-4" />
+        icon: <CircleHelp className="w-4 h-4 text-muted-foreground" />
     }
 }
 

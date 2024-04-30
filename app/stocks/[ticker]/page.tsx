@@ -184,8 +184,8 @@ export default async function StockPage({ params }: any) {
                 <CardHeader>
                     <CardTitle>Indicadores</CardTitle>
                 </CardHeader>
-                <CardContent className="grid grid-cols-1 md:grid-cols-5 gap-4">
-                    <IndicatorsSummary ticker={params.ticker}></IndicatorsSummary>
+                <CardContent className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                    <IndicatorsSummary ticker={params.ticker} />
                 </CardContent>
             </SectionCard>
 
@@ -205,7 +205,7 @@ export default async function StockPage({ params }: any) {
                     <CardTitle>Balanço Patrimonial</CardTitle>
                 </CardHeader>
                 <CardContent className="grid grid-cols-1 md:grid-cols-8 gap-7">
-                    <PatrimonialBalanceSummary ticker={params.ticker}></PatrimonialBalanceSummary>
+                    <PatrimonialBalanceSummary ticker={params.ticker} />
                 </CardContent>
             </SectionCard>
         </SingleColumn>

@@ -1,4 +1,5 @@
-import CompanySummary from "./CompanySummary/CompanySummary";
+import Link from "next/link";
+import { Suspense } from "react";
 import SingleColumn from "@/components/templates/SingleColumn"
 import {
     Card,
@@ -9,9 +10,10 @@ import {
 } from "@/components/ui/card"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { MoveDown, MoveUp } from "lucide-react";
-import Link from "next/link";
-import { Suspense } from "react";
+import CompanySummary from "./CompanySummary/CompanySummary";
 import { Loading as CompanySummaryLoading } from "./CompanySummary/Loading";
+import { Dividends } from "./Dividends/Dividends";
+import { Loading as DividendsLoading } from "./Dividends/Loading";
 
 function SectionCard({ children, id }: { children: React.ReactNode, id?: string }) {
     return (
@@ -189,10 +191,11 @@ export default async function StockPage({ params }: any) {
             <SectionCard id="dividendos">
                 <CardHeader>
                     <CardTitle>Dividendos</CardTitle>
-                    <CardDescription>Card Description</CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <p>Card Content</p>
+                    <Suspense fallback={<DividendsLoading />}>
+                        <Dividends ticker={params.ticker} />
+                    </Suspense>
                 </CardContent>
             </SectionCard>
 

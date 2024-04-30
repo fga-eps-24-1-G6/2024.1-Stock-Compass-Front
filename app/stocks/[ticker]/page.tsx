@@ -13,6 +13,7 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { Loading as CompanySummaryLoading } from "./CompanySummary/Loading";
 import IndicatorsSummary from "./IndicatorsSummary/IndicatorsSummary";
+import PatrimonialBalanceSummary from "./PatrimonialBalanceSummary/PatrimonialBalanceSummary";
 
 function SectionCard({ children, id }: { children: React.ReactNode, id?: string }) {
     return (
@@ -202,8 +203,8 @@ export default async function StockPage({ params }: any) {
                     <CardTitle>Balanço Patrimonial</CardTitle>
                     <CardDescription>Card Description</CardDescription>
                 </CardHeader>
-                <CardContent>
-                    <p>Card Content</p>
+                <CardContent className="grid grid-cols-1 md:grid-cols-8 gap-7">
+                <PatrimonialBalanceSummary ticker={params.ticker}></PatrimonialBalanceSummary>
                 </CardContent>
             </SectionCard>
         </SingleColumn>

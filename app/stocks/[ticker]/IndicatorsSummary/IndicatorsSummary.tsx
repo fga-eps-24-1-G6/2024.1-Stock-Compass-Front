@@ -1,6 +1,4 @@
-import {
-  IconBadge,
-} from "../../../../components/IconBadge/IconBadge";
+import { DescriptionMark } from "@/components/DescriptionMark/DescriptionMark";
 import { Card } from "../../../../components/ui/card";
 
 async function getIndicatorsSummary(ticker: string) {
@@ -96,7 +94,7 @@ export default async function IndicatorsSummary({
     >
       <div className="flex flex-row justify-between items-center">
         <h1 className="text-lg font-semibold">{item.indicator}</h1>
-        <IconBadge variant="question" />
+        <DescriptionMark />
       </div>
       <p className="text-2xl font-semibold text-teal-400 w-full flex justify-end">
         {item.value}

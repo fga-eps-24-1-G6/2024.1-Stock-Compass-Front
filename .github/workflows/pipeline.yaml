@@ -1,0 +1,41 @@
+name: pipeline
+
+on:
+  push:
+    branches: [main]
+
+
+jobs:
+  lintTest:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone Repository
+        uses: actions/checkout@v2
+      - name: Install dependencies
+        run: |
+          echo "Running Installing dependencies..."
+          npm install 
+      - name: Run Linting
+        run: |
+          echo "Running Linting tests..."
+          npm run lint
+        env: 
+          CI: true
+  Sonar:
+     - name: Sonar Scan
+       uses: sonarsource/sonarqube-scan-action@master
+       env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: 'https://sonarcloud.io/'
+  
+  
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Test
+        run: |
+          echo "Running Test Suit..."
+          npm run test
+  

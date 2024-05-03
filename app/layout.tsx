@@ -8,16 +8,36 @@ const inter = Inter({ subsets: ["latin"] });
 
 const TopBar = () => {
   return (
-    <div className="top-bar">
-      {/* Conteúdo da barra superior */}
-      <h1>Stock Compass</h1>
-      <Button variant="default" size="default">
+    <div className="top-bar bg-gray-900 flex items-center justify-between px-4 py-3">
+      <h1 className="text-white">Stock Compass</h1>
+      <Button variant="default" size="default" className="text-black bg-white">
         Login
       </Button>
     </div>
   );
 };
 
+/*
+
+const SideMenu = () => {
+  return (
+    <div className="side-menu bg-gray-900 rounded-r-lg border-r-4 border-gray-700 flex flex-col justify-start items-center" style={{ height: '85vh', marginLeft: '0.5vw'}}>
+      <div className="flex flex-col items-center">
+        <Button variant="default" size="default" className="mb-4" style={{ marginTop: '1vh' }}>
+          <img src="../assets/iconHome.png" alt="" />
+        </Button>
+        <Button variant="default" size="default" className="mb-4">
+          <img src="../assets/iconPesquisa.png" alt="" />
+        </Button>
+        <Button variant="default" size="default" className="mb-4">
+          <img src="../assets/iconDash.png" alt="" />
+        </Button>
+      </div>
+    </div>
+  );
+}
+
+*/
 export const metadata: Metadata = {
   title: "Stock Compass",
   description: "Plataforma de educação financeira e investimentos",
@@ -31,9 +51,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <TopBar/>
-        {children}
+        <TopBar />
+        <div className="flex justify-center items-center">
+          {/* <SideMenu /> */}
+          <main>{children}</main>
+        </div>
       </body>
     </html>
   );
 }
+

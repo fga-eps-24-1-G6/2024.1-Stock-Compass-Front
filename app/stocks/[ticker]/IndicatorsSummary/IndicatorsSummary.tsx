@@ -5,7 +5,7 @@ async function getIndicatorsSummary(ticker: string) {
   return [
     {
       indicator: "P/L",
-      value: "5.0",
+      value: "3.0",
     },
     {
       indicator: "P/VP",
@@ -17,15 +17,15 @@ async function getIndicatorsSummary(ticker: string) {
     },
     {
       indicator: "PAYOUT",
-      value: "5.0%",
+      value: "65.0%",
     },
     {
       indicator: "MARGEM LÍQ",
-      value: "5.0%",
+      value: "15.0%",
     },
     {
       indicator: "MARGEM BRUTA",
-      value: "5.0%",
+      value: "25.0%",
     },
     {
       indicator: "MARGEM EBIT",
@@ -37,43 +37,43 @@ async function getIndicatorsSummary(ticker: string) {
     },
     {
       indicator: "EV/EBITDA",
-      value: "5.0",
+      value: "5.1",
     },
     {
       indicator: "VPA",
-      value: "5.0",
+      value: "4.0",
     },
     {
       indicator: "LPA",
-      value: "5.0",
+      value: "3.0",
     },
     {
       indicator: "ROE",
-      value: "5.0%",
+      value: "14.0%",
     },
     {
       indicator: "ROIC",
-      value: "5.0%",
+      value: "16.0%",
     },
     {
       indicator: "ROA",
-      value: "5.0%",
+      value: "13.0%",
     },
     {
       indicator: "CAGR LUCRO",
-      value: "5.0%",
+      value: "15.5%",
     },
     {
       indicator: "CAGR REC",
-      value: "5.0%",
+      value: "10.0%",
     },
     {
       indicator: "DÍV LÍQ/PAT LÍQ",
-      value: "5.0",
+      value: "1.5",
     },
     {
       indicator: "DÍV LÍQ/EBIT",
-      value: "5.0",
+      value: "2.0",
     },
   ];
 }

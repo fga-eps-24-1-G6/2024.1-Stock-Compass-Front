@@ -15,7 +15,7 @@ import { Loading as CompanySummaryLoading } from "./CompanySummary/Loading";
 import { Dividends } from "./Dividends/Dividends";
 import { Loading as DividendsLoading } from "./Dividends/Loading";
 import IndicatorsSummary from "./IndicatorsSummary/IndicatorsSummary";
-import PatrimonialBalanceSummary from "./PatrimonialBalanceSummary/PatrimonialBalanceSummary";
+import BalanceSheetSummary from "./BalanceSheetSummary/BalanceSheetSummary";
 
 function SectionCard({ children, id }: { children: React.ReactNode, id?: string }) {
     return (
@@ -205,7 +205,7 @@ export default async function StockPage({ params }: any) {
                     <CardTitle>Balanço Patrimonial</CardTitle>
                 </CardHeader>
                 <CardContent className="grid grid-cols-1 md:grid-cols-8 gap-7">
-                    <PatrimonialBalanceSummary ticker={params.ticker} />
+                    <BalanceSheetSummary ticker={params.ticker} />
                 </CardContent>
             </SectionCard>
         </SingleColumn>

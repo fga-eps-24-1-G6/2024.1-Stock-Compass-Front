@@ -27,6 +27,9 @@ interface DoughnutChartProps {
     labels: string[]
 }
 
+type position = "right" | "center" | "left" | "top" | "bottom" | "chartArea" | undefined;
+type align = "center" | "start" | "end" | undefined;
+
 export function DoughnutChart({ data, labels }: DoughnutChartProps) {
     const chartData = {
         labels,
@@ -45,8 +48,8 @@ export function DoughnutChart({ data, labels }: DoughnutChartProps) {
         plugins: {
             legend: {
                 display: true,
-                position: 'right',
-                align: 'start',
+                position: 'right' as position,
+                align: 'start' as align,
                 labels: {
                     useBorderRadius: true,
                     borderRadius: 20000,

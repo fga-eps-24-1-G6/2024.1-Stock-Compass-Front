@@ -24,13 +24,14 @@ ChartJS.register(
 
 interface DoughnutChartProps {
     data: number[],
-    labels: string[]
+    labels: string[],
+    showLegend: boolean
 }
 
 type position = "right" | "center" | "left" | "top" | "bottom" | "chartArea" | undefined;
 type align = "center" | "start" | "end" | undefined;
 
-export function DoughnutChart({ data, labels }: DoughnutChartProps) {
+export function DoughnutChart({ data, labels, showLegend }: DoughnutChartProps) {
     const chartData = {
         labels,
         datasets: [{
@@ -47,7 +48,7 @@ export function DoughnutChart({ data, labels }: DoughnutChartProps) {
     const options = {
         plugins: {
             legend: {
-                display: true,
+                display: showLegend,
                 position: 'right' as position,
                 align: 'start' as align,
                 labels: {

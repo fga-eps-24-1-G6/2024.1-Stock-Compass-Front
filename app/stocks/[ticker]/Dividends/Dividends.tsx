@@ -133,6 +133,7 @@ export async function Dividends({ ticker }: DividendsProps) {
                     <p className="text-xl">Meses de Pagamento</p>
                     <div className="w-full h-56 flex justify-center">
                         <DoughnutChart
+                            showLegend={false}
                             data={handlePaymentMonths().frequencies}
                             labels={handlePaymentMonths().months}
                         />
@@ -147,6 +148,7 @@ export async function Dividends({ ticker }: DividendsProps) {
                         <BarChart
                             data={handleYearlyPayments().payments}
                             labels={handleYearlyPayments().years}
+                            backgroundColor='rgba(113, 113, 122, 1)'
                         />
                     </div>
 

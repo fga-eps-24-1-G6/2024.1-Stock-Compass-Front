@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import React from "react";
 import { Button } from "../components/ui/button";
+import { ThemeProvider } from "@/components/theme-provider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -50,12 +51,19 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>
-        <TopBar />
-        <div className="flex justify-center items-center">
-          <SideMenu />
-          <main>{children}</main>
-        </div>
+      <body className={`${inter.className}`}>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <TopBar />
+          <div className="flex justify-center items-center">
+            <SideMenu />
+            <main>{children}</main>
+          </div>
+        </ThemeProvider>
       </body>
     </html>
   );

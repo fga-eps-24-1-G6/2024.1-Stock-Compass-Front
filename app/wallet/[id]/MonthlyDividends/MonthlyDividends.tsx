@@ -1,6 +1,6 @@
 import { BarChart } from "@/components/BarChart/BarChart";
 
-async function getDividends(ticker: string) {
+async function getDividends(id: string) {
     return {
         paymentMonths: [
             {
@@ -55,14 +55,14 @@ async function getDividends(ticker: string) {
     }
 }
 
-interface StockssProps {
-    ticker: string
+interface MonthlyDividendsProps {
+    id: string
 };
 
-export async function Stockss({ ticker }: StockssProps) {
+export async function MonthlyDividends({ id }: MonthlyDividendsProps) {
     const {
         paymentMonths,
-    } = await getDividends(ticker);
+    } = await getDividends(id);
 
     function handlePaymentMonths() {
         const formattedPaymentMonths = paymentMonths.sort((a, b) => b.frequency - a.frequency);
@@ -73,11 +73,12 @@ export async function Stockss({ ticker }: StockssProps) {
 
 
     return (
-        <main className="flex flex-col md:grid md:grid-cols-2 gap-6">
+        <main className="flex flex-col md:grid md:grid-cols-2 gap-6 text-teal-700">
             <BarChart
                 data={handlePaymentMonths().frequencies}
                 labels={handlePaymentMonths().months}
-                backgroundColor='rgba(45, 212, 191, 1)'
+                backgroundColor="rgba(45, 212, 191)"
+                hoverBackgroundColor="rgb(15, 118, 110)"
             />
         </main>
     )

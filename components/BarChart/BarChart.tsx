@@ -23,19 +23,20 @@ ChartJS.register(
 interface BarChartProps {
     data: number[],
     labels: string[],
-    backgroundColor: string
+    backgroundColor?: string,
+    hoverBackgroundColor?: string
 }
 
-export function BarChart({ data, labels, backgroundColor }: BarChartProps) {
+export function BarChart({ data, labels, backgroundColor, hoverBackgroundColor }: BarChartProps) {
     const barChartData = {
         labels,
         datasets: [{
             data,
             backgroundColor: [
-                backgroundColor,
+                backgroundColor || 'rgba(113, 113, 122, 1)',
             ],
             hoverBackgroundColor: [
-                'rgba(228, 228, 231, 1)',
+                hoverBackgroundColor || 'rgba(228, 228, 231, 1)',
             ],
             borderWidth: 0
         }]

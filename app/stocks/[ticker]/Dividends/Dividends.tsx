@@ -148,7 +148,6 @@ export async function Dividends({ ticker }: DividendsProps) {
                         <BarChart
                             data={handleYearlyPayments().payments}
                             labels={handleYearlyPayments().years}
-                            backgroundColor='rgba(113, 113, 122, 1)'
                         />
                     </div>
 

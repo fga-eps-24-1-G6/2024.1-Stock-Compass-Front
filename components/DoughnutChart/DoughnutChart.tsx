@@ -37,10 +37,11 @@ export function DoughnutChart({ data, labels, showLegend }: DoughnutChartProps) 
         datasets: [{
             data,
             backgroundColor: [
-                'rgba(255, 255, 255, 1)',
-                'rgba(228, 228, 231, 1)',
-                'rgba(161, 161, 170, 1)',
-                'rgba(113, 113, 122, 1)',
+                'rgba(255, 255, 255)',
+                'rgba(228, 228, 231)',
+                'rgba(161, 161, 170)',
+                'rgba(113, 113, 122)',
+                'rgba(39, 39, 42)',
             ],
         }],
     };

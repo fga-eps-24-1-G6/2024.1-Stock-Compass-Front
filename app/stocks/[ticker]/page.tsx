@@ -16,7 +16,8 @@ import { Dividends } from "./Dividends/Dividends";
 import { Loading as DividendsLoading } from "./Dividends/Loading";
 import IndicatorsSummary from "./IndicatorsSummary/IndicatorsSummary";
 import { Payment, columns } from "./BalanceSheetSummary/Columns";
-import { DataTable } from "./BalanceSheetSummary/Datatable";
+import { DataTable } from "../../../components/DataTable/DataTable";
+import { Loading as BalanceSheetLoading } from "./BalanceSheetSummary/Loading";
 
 function SectionCard({
   children,
@@ -196,9 +197,8 @@ export default async function StockPage({ params }: any) {
       <div key={index + item.lable} className="flex flex-col gap-2">
         <p className="text-sm text-muted-foreground">{item.lable}</p>
         <span
-          className={`flex items-center text-lg font-semibold ${
-            item.value > 0 ? "text-teal-400" : "text-amber-500"
-          }`}
+          className={`flex items-center text-lg font-semibold ${item.value > 0 ? "text-teal-400" : "text-amber-500"
+            }`}
         >
           {item.value > 0 ? (
             <MoveUp className="w-4 h-4" />
@@ -294,7 +294,9 @@ export default async function StockPage({ params }: any) {
           <CardTitle>Balanço Patrimonial</CardTitle>
         </CardHeader>
         <CardContent>
-          <DataTable columns={columns} data={data} />
+          <Suspense fallback={<BalanceSheetLoading />}>
+            <DataTable columns={columns} data={data} />
+          </Suspense>
         </CardContent>
       </SectionCard>
     </SingleColumn>

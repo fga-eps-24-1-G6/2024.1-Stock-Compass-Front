@@ -4,12 +4,16 @@ import "./globals.css";
 import React from "react";
 import { Button } from "../components/ui/button";
 import { ThemeProvider } from "@/components/theme-provider";
+import { Home } from 'lucide-react';
+import { Search } from 'lucide-react';
+import { Laptop } from 'lucide-react';
+
 
 const inter = Inter({ subsets: ["latin"] });
 
 const TopBar = () => {
   return (
-    <div className="top-bar flex items-center justify-between px-4 py-2">
+    <div className="top-bar flex items-center justify-between px-4 py-4">
       <h1>
         <span className="text-white font-bold">Stock </span>
         <span className="font-bold text-teal-400">Compass</span>
@@ -23,16 +27,16 @@ const TopBar = () => {
 
 const SideMenu = () => {
   return (
-    <div className="side-menu rounded-r-lg border-r-4 border-gray-700 flex flex-col justify-start items-center" style={{ height: '85vh', marginLeft: '0.5vw'}}>
-      <div className="flex flex-col items-center">
-        <Button variant="default" size="default" className="mb-4" style={{ marginTop: '1vh' }}>
-          <img src="../assets/iconHome.png" alt="" />
+    <div className="side-menu border border-gray-700 rounded-3xl p-0 ml-4 h-[32rem]">
+      <div className="flex flex-col items-start">
+        <Button variant="default" size="default" className="mb-6 mt-6 bg-transparent">
+          <Home color="white" size={26} />
         </Button>
-        <Button variant="default" size="default" className="mb-4">
-          <img src="../assets/iconPesquisa.png" alt="" />
+        <Button variant="default" size="default" className="mb-6 bg-transparent">
+          <Search color="white" size={26} />
         </Button>
-        <Button variant="default" size="default" className="mb-4">
-          <img src="../assets/iconDash.png" alt="" />
+        <Button variant="default" size="default" className="mb-6 bg-transparent">
+          <Laptop color="white" size={26} />
         </Button>
       </div>
     </div>

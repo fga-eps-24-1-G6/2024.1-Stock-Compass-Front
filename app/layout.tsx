@@ -1,8 +1,14 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import React from "react";
 import { Button } from "../components/ui/button";
+import {
+  ClerkProvider,
+  SignInButton,
+  SignedIn,
+  SignedOut,
+  UserButton,
+} from "@clerk/nextjs";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Home } from 'lucide-react';
 import { Search } from 'lucide-react';
@@ -54,21 +60,31 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${inter.className}`}>
+    <ClerkProvider>
+      <html lang="en">
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
           enableSystem
           disableTransitionOnChange
         >
-          <TopBar />
-          <div className="flex justify-center items-center">
-            <SideMenu />
-            <main>{children}</main>
-          </div>
+          <body className={`${inter.className}`}>
+            <header>
+              <SignedOut>
+                <SignInButton />
+              </SignedOut>
+              <SignedIn>
+                <UserButton />
+              </SignedIn>
+            </header>
+            <TopBar />
+            <div className="flex justify-center items-center">
+              <SideMenu />
+              <main>{children}</main>
+            </div>
+          </body>
         </ThemeProvider>
-      </body>
-    </html>
+      </html>
+    </ClerkProvider>
   );
 }

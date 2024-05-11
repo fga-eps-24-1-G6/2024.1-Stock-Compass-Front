@@ -10,41 +10,51 @@ import {
   UserButton,
 } from "@clerk/nextjs";
 import { ThemeProvider } from "@/components/theme-provider";
-import { Home } from 'lucide-react';
-import { Search } from 'lucide-react';
-import { Laptop } from 'lucide-react';
-
+import { Home, WalletMinimal, Search } from 'lucide-react';
+import Link from "next/link";
+import { SideMenu } from "@/components/SideMenu";
 
 const inter = Inter({ subsets: ["latin"] });
 
 const TopBar = () => {
   return (
-    <div className="top-bar flex items-center justify-between px-4 py-4">
-      <h1>
-        <span className="text-white font-bold">Stock </span>
-        <span className="font-bold text-teal-400">Compass</span>
-      </h1>
-      <Button variant="default" size="default" className="bg-white text-black">
-        Login
-      </Button>
-    </div>
+    <header className="flex items-center justify-between mb-6">
+      <div className="flex gap-2 font-semibold text-xl md:text-3xl tracking-widest">
+        stock <p className="text-teal-400">compass</p>
+      </div>
+
+      <div className="hidden md:block">
+        <SignedOut>
+          <SignInButton>
+            <Button variant="default" size="default">
+              Login
+            </Button>
+          </SignInButton>
+        </SignedOut>
+        <SignedIn>
+          <UserButton />
+        </SignedIn>
+      </div>
+
+      <div className="block md:hidden">
+        <SideMenu />
+      </div>
+    </header>
   );
 };
 
-const SideMenu = () => {
+const SideBar = () => {
   return (
-    <div className="side-menu border border-gray-700 rounded-3xl p-0 ml-4 h-[32rem]">
-      <div className="flex flex-col items-start">
-        <Button variant="default" size="default" className="mb-6 mt-6 bg-transparent">
-          <Home color="white" size={26} />
-        </Button>
-        <Button variant="default" size="default" className="mb-6 bg-transparent">
-          <Search color="white" size={26} />
-        </Button>
-        <Button variant="default" size="default" className="mb-6 bg-transparent">
-          <Laptop color="white" size={26} />
-        </Button>
-      </div>
+    <div className="hidden md:flex flex-col items-start border border-muted rounded-full gap-2 p-1">
+      <Link className="p-3 rounded-full hover:bg-muted" href={""}>
+        <Home className="w-6 h-6" />
+      </Link>
+      <Link className="p-3 rounded-full hover:bg-muted" href={""}>
+        <Search className="w-6 h-6" />
+      </Link>
+      <Link className="p-3 rounded-full hover:bg-muted" href={""}>
+        <WalletMinimal className="w-6 h-6" />
+      </Link>
     </div>
   );
 }
@@ -61,29 +71,23 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-      <html lang="en">
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="dark"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <body className={`${inter.className}`}>
-            <header>
-              <SignedOut>
-                <SignInButton />
-              </SignedOut>
-              <SignedIn>
-                <UserButton />
-              </SignedIn>
-            </header>
+      <html lang="en" className="h-screen">
+        <body className={`${inter.className} flex flex-col !px-6 !py-4 min-h-full`}>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="dark"
+            enableSystem
+            disableTransitionOnChange
+          >
             <TopBar />
-            <div className="flex justify-center items-center">
-              <SideMenu />
-              <main>{children}</main>
-            </div>
-          </body>
-        </ThemeProvider>
+            <main className="flex flex-grow gap-6 w-full">
+              <SideBar />
+              <section className="flex-grow w-full">
+                {children}
+              </section>
+            </main>
+          </ThemeProvider>
+        </body>
       </html>
     </ClerkProvider>
   );

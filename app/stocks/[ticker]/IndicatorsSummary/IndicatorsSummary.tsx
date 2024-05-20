@@ -1,27 +1,45 @@
 import { DescriptionMark } from "@/components/DescriptionMark/DescriptionMark";
 import { Card } from "../../../../components/ui/card";
+import { Formatter } from "@/utils/formatter";
 
-async function getIndicatorsSummary(ticker: string) {
-  return [
-    { indicator: "P/L", value: "3.0", },
-    { indicator: "P/VP", value: "0.95", },
-    { indicator: "DIV YIELD", value: "5.0%", },
-    { indicator: "PAYOUT", value: "65.0%", },
-    { indicator: "MARGEM LÍQ", value: "15.0%", },
-    { indicator: "MARGEM BRUTA", value: "25.0%", },
-    { indicator: "MARGEM EBIT", value: "5.0%", },
-    { indicator: "EV/EBIT", value: "5.0", },
-    { indicator: "EV/EBITDA", value: "5.1", },
-    { indicator: "VPA", value: "4.0", },
-    { indicator: "LPA", value: "3.0", },
-    { indicator: "ROE", value: "14.0%", },
-    { indicator: "ROIC", value: "16.0%", },
-    { indicator: "ROA", value: "13.0%", },
-    { indicator: "CAGR LUCRO", value: "15.5%", },
-    { indicator: "CAGR REC", value: "10.0%", },
-    { indicator: "DÍV LÍQ/PAT LÍQ", value: "1.5", },
-    { indicator: "DÍV LÍQ/EBIT", value: "2.0", },
-  ];
+const formatMap = {
+  percentage: [
+    'DIV YIELD',
+    'PAYOUT',
+    'MARGEM LÍQ',
+    'MARGEM BRUTA',
+    'MARGEM EBIT',
+    'ROE',
+    'ROIC',
+    'ROA',
+    'DÍV LÍQ/PAT LÍQ',
+    'DÍV LÍQ/EBIT',
+    'CAGR LUCRO',
+    'CAGR REC'
+  ],
+  raw: [
+    'LPA',
+    'P/L',
+    'VPA',
+    'P/VP',
+    'EV/EBIT',
+    'EV/EBITDA',
+  ]
+}
+
+interface Indicator {
+  indicator: string,
+  value: number
+}
+
+async function getIndicatorsSummary(ticker: string): Promise<Indicator[]> {
+  const response = await fetch(`${process.env.STOCK_API}/api/stocks/indicators/${ticker.toUpperCase()}`);
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+
+  const data = await response.json();
+  return [...data.indicatorValueResponseList] as Indicator[];
 }
 
 interface IndicatorsSummaryProps {
@@ -33,6 +51,14 @@ export default async function IndicatorsSummary({
 }: Readonly<IndicatorsSummaryProps>) {
   const indicatorsSummary = await getIndicatorsSummary(ticker);
 
+  function handleIndicator(item: { indicator: string, value: number }) {
+    if (formatMap.percentage.includes(item.indicator))
+      return Formatter.percentage(item.value);
+
+    return item.value.toFixed(2);
+  }
+
+
   return indicatorsSummary.map((item, index) => (
     <Card
       key={index + item.indicator}
@@ -43,7 +69,7 @@ export default async function IndicatorsSummary({
         <DescriptionMark />
       </div>
       <p className="text-2xl font-semibold text-teal-400 w-full flex justify-end">
-        {item.value}
+        {handleIndicator(item)}
       </p>
     </Card>
   ));

@@ -18,6 +18,20 @@ import IndicatorsSummary from "./IndicatorsSummary/IndicatorsSummary";
 import { Payment, columns } from "./BalanceSheetSummary/Columns";
 import { DataTable } from "../../../components/DataTable/DataTable";
 import { Loading as BalanceSheetLoading } from "./BalanceSheetSummary/Loading";
+import { Formatter } from "@/utils/formatter";
+
+interface StockSummary {
+  ticker: string,
+  currentPrice: number,
+  companyName: string,
+  freeFloat: number,
+  tagAlong: number,
+  avgDailyLiquidity: number,
+  categorie: string,
+  variationOneDay: number,
+  variationOneMonth: number,
+  variationTwelveMonths: number,
+}
 
 function SectionCard({
   children,
@@ -33,19 +47,14 @@ function SectionCard({
   );
 }
 
-async function getStockSummary(ticker: string) {
-  return {
-    ticker: "BBAS3",
-    current_price: "R$ 27,91",
-    company_name: "Banco do Brasil",
-    free_float: 63.44,
-    tag_along: 100.0,
-    avg_daily_liquidity: "R$ 59.74 M",
-    categories: ["DIV", "LARGE"],
-    variation_one_day: 8.05,
-    variation_one_month: -12.58,
-    variation_twelve_months: 40.51,
-  };
+async function getStockSummary(ticker: string): Promise<StockSummary> {
+  const response = await fetch(`${process.env.STOCK_API}/api/stocks/stock-summary/${ticker.toUpperCase()}`);
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+
+  const data = await response.json();
+  return data;
 }
 
 async function getData(): Promise<Payment[]> {
@@ -157,15 +166,15 @@ export default async function StockPage({ params }: any) {
     const stockInfo = [
       {
         lable: "FREE FLOAT",
-        value: stockSummary["free_float"].toString() + " %",
+        value: Formatter.percentage(stockSummary.freeFloat),
       },
       {
         lable: "TAG ALONG",
-        value: stockSummary["tag_along"].toString() + " %",
+        value: Formatter.percentage(stockSummary.tagAlong),
       },
       {
         lable: "LIQUIDEZ MÉDIA DIÁRIA",
-        value: stockSummary["avg_daily_liquidity"],
+        value: Formatter.shortCurrency(stockSummary.avgDailyLiquidity),
       },
     ];
 
@@ -181,15 +190,15 @@ export default async function StockPage({ params }: any) {
     const stockVariations = [
       {
         lable: "VAR (1D)",
-        value: stockSummary["variation_one_day"],
+        value: stockSummary.variationOneDay,
       },
       {
         lable: "VAR (1M)",
-        value: stockSummary["variation_one_month"],
+        value: stockSummary.variationOneMonth,
       },
       {
         lable: "VAR (12M)",
-        value: stockSummary["variation_twelve_months"],
+        value: stockSummary.variationTwelveMonths,
       },
     ];
 
@@ -205,7 +214,7 @@ export default async function StockPage({ params }: any) {
           ) : (
             <MoveDown className="w-4 h-4" />
           )}
-          {`${Math.abs(item.value)}%`}
+          {Formatter.percentage(Math.abs(item.value))}
         </span>
       </div>
     ));
@@ -220,13 +229,13 @@ export default async function StockPage({ params }: any) {
               <div className="flex gap-4 items-center">
                 <div className="w-16 h-16 rounded-full bg-slate-700"></div>
                 <div className="flex flex-col justify-between">
-                  <CardTitle>{stockSummary["ticker"]}</CardTitle>
+                  <CardTitle>{stockSummary.ticker}</CardTitle>
                   <CardDescription className="text-base">
-                    {stockSummary["company_name"]}
+                    {stockSummary.companyName}
                   </CardDescription>
                 </div>
               </div>
-              <CardTitle>{stockSummary["current_price"]}</CardTitle>
+              <CardTitle>{Formatter.currency(stockSummary.currentPrice)}</CardTitle>
             </div>
             {renderStockCategories()}
           </div>

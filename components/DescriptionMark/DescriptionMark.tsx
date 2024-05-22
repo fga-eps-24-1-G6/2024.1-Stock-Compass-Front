@@ -9,7 +9,9 @@ export function DescriptionMark() {
         <TooltipProvider>
             <Tooltip>
                 <TooltipTrigger asChild>
-                    <CircleHelp className="w-4 h-4 text-muted-foreground" />
+                    <div className="p2">
+                        <CircleHelp className="w-4 h-4 text-muted-foreground" />
+                    </div>
                 </TooltipTrigger>
                 <TooltipContent>
                     <Card className="p-4">

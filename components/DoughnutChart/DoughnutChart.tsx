@@ -11,6 +11,7 @@ import {
     Legend,
     ArcElement
 } from 'chart.js'
+import Formatter from '@/utils/formatter';
 
 ChartJS.register(
     CategoryScale,
@@ -40,6 +41,7 @@ export function DoughnutChart({ data, labels }: DoughnutChartProps) {
                 'rgba(228, 228, 231, 1)',
                 'rgba(161, 161, 170, 1)',
                 'rgba(113, 113, 122, 1)',
+                'rgba(59, 59, 64, 1)',
             ],
         }],
     };
@@ -65,7 +67,7 @@ export function DoughnutChart({ data, labels }: DoughnutChartProps) {
                 displayColors: false,
                 callbacks: {
                     label: function (context: any) {
-                        return context.parsed.toString() + '%';
+                        return Formatter.percentage(context.parsed);
                     }
                 }
             }

@@ -9,16 +9,17 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { MoveDown, MoveUp } from "lucide-react";
+import { MoveDown, MoveUp, TriangleAlert } from "lucide-react";
 import CompanySummary from "./CompanySummary/CompanySummary";
 import { Loading as CompanySummaryLoading } from "./CompanySummary/Loading";
 import { Dividends } from "./Dividends/Dividends";
 import { Loading as DividendsLoading } from "./Dividends/Loading";
 import IndicatorsSummary from "./IndicatorsSummary/IndicatorsSummary";
-import { Payment, columns } from "./BalanceSheetSummary/Columns";
-import { DataTable } from "../../../components/DataTable/DataTable";
 import { Loading as BalanceSheetLoading } from "./BalanceSheetSummary/Loading";
-import { Formatter } from "@/utils/formatter";
+import BalanceSheet from "./BalanceSheetSummary/BalanceSheetSummary";
+import Formatter from "@/utils/formatter";
+import Valuation from "./Valuation/Valuation";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 interface StockSummary {
   ticker: string,
@@ -48,7 +49,7 @@ function SectionCard({
 }
 
 async function getStockSummary(ticker: string): Promise<StockSummary> {
-  const response = await fetch(`${process.env.STOCK_API}/api/stocks/stock-summary/${ticker.toUpperCase()}`);
+  const response = await fetch(`${process.env.STOCK_API}/api/stocks/stock-summary/${ticker}`);
   if (!response.ok) {
     throw new Error(`HTTP error! status: ${response.status}`);
   }
@@ -57,93 +58,8 @@ async function getStockSummary(ticker: string): Promise<StockSummary> {
   return data;
 }
 
-async function getData(): Promise<Payment[]> {
-  // Fetch data from your API here.
-  return [
-    {
-      id: "728ed52f",
-      item1: "item",
-      item2: "item",
-      item3: "item",
-      item4: "item",
-      item5: "item",
-      item6: "item",
-      item7: "item",
-      item8: "item",
-    },
-    {
-      id: "728ed52f",
-      item1: "item",
-      item2: "item",
-      item3: "item",
-      item4: "item",
-      item5: "item",
-      item6: "item",
-      item7: "item",
-      item8: "item",
-    },
-    {
-      id: "728ed52f",
-      item1: "item",
-      item2: "item",
-      item3: "item",
-      item4: "item",
-      item5: "item",
-      item6: "item",
-      item7: "item",
-      item8: "item",
-    },
-    {
-      id: "728ed52f",
-      item1: "item",
-      item2: "item",
-      item3: "item",
-      item4: "item",
-      item5: "item",
-      item6: "item",
-      item7: "item",
-      item8: "item",
-    },
-    {
-      id: "728ed52f",
-      item1: "item",
-      item2: "item",
-      item3: "item",
-      item4: "item",
-      item5: "item",
-      item6: "item",
-      item7: "item",
-      item8: "item",
-    },
-    {
-      id: "728ed52f",
-      item1: "item",
-      item2: "item",
-      item3: "item",
-      item4: "item",
-      item5: "item",
-      item6: "item",
-      item7: "item",
-      item8: "item",
-    },
-    {
-      id: "728ed52f",
-      item1: "item",
-      item2: "item",
-      item3: "item",
-      item4: "item",
-      item5: "item",
-      item6: "item",
-      item7: "item",
-      item8: "item",
-    },
-    // ...
-  ];
-}
-
 export default async function StockPage({ params }: any) {
-  const stockSummary = await getStockSummary(params.ticker);
-  const data = await getData();
+  const stockSummary = await getStockSummary(params.ticker.toUpperCase());
 
   const renderStockCategories = () => {
     const stockCategories = [
@@ -220,6 +136,13 @@ export default async function StockPage({ params }: any) {
     ));
   };
 
+  function handleCompanyThumb() {
+    const name = stockSummary.companyName;
+    if (!name) return '';
+
+    return name.slice(0, 2).toUpperCase();
+  }
+
   return (
     <SingleColumn>
       <SectionCard>
@@ -227,7 +150,9 @@ export default async function StockPage({ params }: any) {
           <div className="flex flex-col gap-4">
             <div className="flex flex-col md:flex-row w-full justify-between gap-4">
               <div className="flex gap-4 items-center">
-                <div className="w-16 h-16 rounded-full bg-slate-700"></div>
+                <div className="w-16 h-16 p-6 rounded-full bg-slate-700 flex items-center justify-center text-3xl text-slate-300">
+                  {handleCompanyThumb()}
+                </div>
                 <div className="flex flex-col justify-between">
                   <CardTitle>{stockSummary.ticker}</CardTitle>
                   <CardDescription className="text-base">
@@ -250,8 +175,8 @@ export default async function StockPage({ params }: any) {
         </CardContent>
       </SectionCard>
 
-      <Tabs defaultValue="company" className="hidden md:block sticky top-0">
-        <TabsList className="grid w-full grid-cols-4">
+      <Tabs defaultValue="company" className="hidden md:block sticky top-0 z-10">
+        <TabsList className="grid w-full grid-cols-5">
           <TabsTrigger value="company">
             <Link href="#empresa">Empresa</Link>
           </TabsTrigger>
@@ -260,6 +185,9 @@ export default async function StockPage({ params }: any) {
           </TabsTrigger>
           <TabsTrigger value="dividends">
             <Link href="#dividendos">Dividendos</Link>
+          </TabsTrigger>
+          <TabsTrigger value="valuation">
+            <Link href="#valuation">Valuation</Link>
           </TabsTrigger>
           <TabsTrigger value="balanceSheet">
             <Link href="#balanco">Balanço Patrimonial</Link>
@@ -283,7 +211,7 @@ export default async function StockPage({ params }: any) {
           <CardTitle>Indicadores</CardTitle>
         </CardHeader>
         <CardContent className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-          <IndicatorsSummary ticker={params.ticker} />
+          <IndicatorsSummary ticker={params.ticker.toUpperCase()} />
         </CardContent>
       </SectionCard>
 
@@ -293,8 +221,28 @@ export default async function StockPage({ params }: any) {
         </CardHeader>
         <CardContent>
           <Suspense fallback={<DividendsLoading />}>
-            <Dividends ticker={params.ticker} />
+            <Dividends ticker={params.ticker.toUpperCase()} />
           </Suspense>
+        </CardContent>
+      </SectionCard>
+
+      <SectionCard id="valuation">
+        <CardHeader>
+          <CardTitle>Valuation</CardTitle>
+        </CardHeader>
+        <CardContent className="flex flex-col gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <Valuation ticker={params.ticker.toUpperCase()} />
+          </div>
+
+          <Alert className="text-start">
+            <TriangleAlert className="h-4 w-4 text-yellow-400" />
+            <AlertTitle>Atenção!</AlertTitle>
+            <AlertDescription>
+              Isso não é uma recomendação de compra/venda, os valores acima são apenas
+              representações didáticas de fórmulas amplamente utilizadas no mercado
+            </AlertDescription>
+          </Alert>
         </CardContent>
       </SectionCard>
 
@@ -304,7 +252,7 @@ export default async function StockPage({ params }: any) {
         </CardHeader>
         <CardContent>
           <Suspense fallback={<BalanceSheetLoading />}>
-            <DataTable columns={columns} data={data} />
+            <BalanceSheet ticker={params.ticker.toUpperCase()} />
           </Suspense>
         </CardContent>
       </SectionCard>

@@ -1,6 +1,6 @@
 import { DescriptionMark } from "@/components/DescriptionMark/DescriptionMark";
-import { Card } from "../../../../components/ui/card";
-import { Formatter } from "@/utils/formatter";
+import { Card } from "@/components/ui/card";
+import Formatter from "@/utils/formatter";
 
 const formatMap = {
   percentage: [
@@ -58,19 +58,23 @@ export default async function IndicatorsSummary({
     return item.value.toFixed(2);
   }
 
+  function renderIndicators() {
+    return indicatorsSummary.map((item, index) => (
+      <Card
+        key={index + item.indicator}
+        className="flex flex-col p-4 rounded-2xl justify-between gap-9"
+      >
+        <div className="flex flex-row justify-between items-center">
+          <h1 className="text-sm md:text-lg font-semibold">{item.indicator}</h1>
+          <DescriptionMark />
+        </div>
+        <p className="text-2xl font-semibold text-teal-400 w-full flex justify-end">
+          {handleIndicator(item)}
+        </p>
+      </Card>
+    ))
+  }
 
-  return indicatorsSummary.map((item, index) => (
-    <Card
-      key={index + item.indicator}
-      className="flex flex-col p-4 rounded-2xl justify-between gap-9"
-    >
-      <div className="flex flex-row justify-between items-center">
-        <h1 className="text-lg font-semibold">{item.indicator}</h1>
-        <DescriptionMark />
-      </div>
-      <p className="text-2xl font-semibold text-teal-400 w-full flex justify-end">
-        {handleIndicator(item)}
-      </p>
-    </Card>
-  ));
+
+  return renderIndicators();
 }

@@ -44,7 +44,7 @@ export async function Dividends({ ticker }: DividendsProps) {
 
     function renderDividendCards() {
         return dividends.map((item) => (
-            <CarouselItem key={item.paymentDate} className="sm:basis-1/2 md:basis-full lg:basis-1/2">
+            <CarouselItem key={item.paymentDate + item.ownershipDate + item.value.toString()} className="sm:basis-1/2 md:basis-full lg:basis-1/2">
                 <Card className="rounded-2xl">
                     <CardContent className="flex flex-col p-4 gap-4">
                         <div className="flex justify-between text-base">

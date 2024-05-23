@@ -36,7 +36,7 @@ export default async function StockSearchPage({ params }: any) {
           </div>
         </CardContent>
       </SectionCard>
-      <div className="grid grid-cols-2 gap-10">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
         <ReturnedStocks ticker={""}></ReturnedStocks>
       </div>
     </SingleColumn>

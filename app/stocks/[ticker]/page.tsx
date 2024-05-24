@@ -25,6 +25,7 @@ interface StockSummary {
   ticker: string,
   currentPrice: number,
   companyName: string,
+  companyId: number,
   freeFloat: number,
   tagAlong: number,
   avgDailyLiquidity: number,
@@ -49,7 +50,7 @@ function SectionCard({
 }
 
 async function getStockSummary(ticker: string): Promise<StockSummary> {
-  const response = await fetch(`${process.env.STOCK_API}/api/stocks/stock-summary/${ticker}`);
+  const response = await fetch(`${process.env.STOCK_API}/api/stocks/stock-summary/${ticker}`, { cache: 'no-store' });
   if (!response.ok) {
     throw new Error(`HTTP error! status: ${response.status}`);
   }
@@ -59,38 +60,32 @@ async function getStockSummary(ticker: string): Promise<StockSummary> {
 }
 
 export default async function StockPage({ params }: any) {
-  const stockSummary = await getStockSummary(params.ticker.toUpperCase());
-
-  const renderStockCategories = () => {
-    const stockCategories = [
-      {
-        lable: "large",
-        color: "bg-violet-800",
-      },
-    ];
-
-    return stockCategories.map((item, index) => (
-      <div key={index + item.lable} className="flex gap-2">
-        <p className={`text-xs font-medium ${item.color} p-1 rounded-sm`}>
-          {item.lable.toLocaleUpperCase()}
-        </p>
-      </div>
-    ));
-  };
+  const {
+    ticker,
+    currentPrice,
+    companyName,
+    companyId,
+    freeFloat,
+    tagAlong,
+    avgDailyLiquidity,
+    variationOneDay,
+    variationOneMonth,
+    variationTwelveMonths
+  } = await getStockSummary(params.ticker.toUpperCase());
 
   const renderStockInfo = () => {
     const stockInfo = [
       {
         lable: "FREE FLOAT",
-        value: Formatter.percentage(stockSummary.freeFloat),
+        value: Formatter.percentage(freeFloat),
       },
       {
         lable: "TAG ALONG",
-        value: Formatter.percentage(stockSummary.tagAlong),
+        value: Formatter.percentage(tagAlong),
       },
       {
         lable: "LIQUIDEZ MÉDIA DIÁRIA",
-        value: Formatter.shortCurrency(stockSummary.avgDailyLiquidity),
+        value: Formatter.shortCurrency(avgDailyLiquidity),
       },
     ];
 
@@ -106,15 +101,15 @@ export default async function StockPage({ params }: any) {
     const stockVariations = [
       {
         lable: "VAR (1D)",
-        value: stockSummary.variationOneDay,
+        value: variationOneDay,
       },
       {
         lable: "VAR (1M)",
-        value: stockSummary.variationOneMonth,
+        value: variationOneMonth,
       },
       {
         lable: "VAR (12M)",
-        value: stockSummary.variationTwelveMonths,
+        value: variationTwelveMonths,
       },
     ];
 
@@ -137,7 +132,7 @@ export default async function StockPage({ params }: any) {
   };
 
   function handleCompanyThumb() {
-    const name = stockSummary.companyName;
+    const name = companyName;
     if (!name) return '';
 
     return name.slice(0, 2).toUpperCase();
@@ -154,15 +149,14 @@ export default async function StockPage({ params }: any) {
                   {handleCompanyThumb()}
                 </div>
                 <div className="flex flex-col justify-between">
-                  <CardTitle>{stockSummary.ticker}</CardTitle>
+                  <CardTitle>{ticker}</CardTitle>
                   <CardDescription className="text-base">
-                    {stockSummary.companyName}
+                    {companyName}
                   </CardDescription>
                 </div>
               </div>
-              <CardTitle>{Formatter.currency(stockSummary.currentPrice)}</CardTitle>
+              <CardTitle>{Formatter.currency(currentPrice)}</CardTitle>
             </div>
-            {renderStockCategories()}
           </div>
         </CardHeader>
 
@@ -199,9 +193,9 @@ export default async function StockPage({ params }: any) {
         <CardHeader>
           <CardTitle>Empresa</CardTitle>
         </CardHeader>
-        <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <CardContent>
           <Suspense fallback={<CompanySummaryLoading />}>
-            <CompanySummary ticker={params.ticker} />
+            <CompanySummary companyId={companyId} />
           </Suspense>
         </CardContent>
       </SectionCard>
@@ -210,7 +204,7 @@ export default async function StockPage({ params }: any) {
         <CardHeader>
           <CardTitle>Indicadores</CardTitle>
         </CardHeader>
-        <CardContent className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+        <CardContent>
           <IndicatorsSummary ticker={params.ticker.toUpperCase()} />
         </CardContent>
       </SectionCard>
@@ -230,19 +224,8 @@ export default async function StockPage({ params }: any) {
         <CardHeader>
           <CardTitle>Valuation</CardTitle>
         </CardHeader>
-        <CardContent className="flex flex-col gap-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Valuation ticker={params.ticker.toUpperCase()} />
-          </div>
-
-          <Alert className="text-start">
-            <TriangleAlert className="h-4 w-4 text-yellow-400" />
-            <AlertTitle>Atenção!</AlertTitle>
-            <AlertDescription>
-              Isso não é uma recomendação de compra/venda, os valores acima são apenas
-              representações didáticas de fórmulas amplamente utilizadas no mercado
-            </AlertDescription>
-          </Alert>
+        <CardContent>
+          <Valuation ticker={params.ticker.toUpperCase()} />
         </CardContent>
       </SectionCard>
 
@@ -252,7 +235,7 @@ export default async function StockPage({ params }: any) {
         </CardHeader>
         <CardContent>
           <Suspense fallback={<BalanceSheetLoading />}>
-            <BalanceSheet ticker={params.ticker.toUpperCase()} />
+            <BalanceSheet companyId={companyId} />
           </Suspense>
         </CardContent>
       </SectionCard>

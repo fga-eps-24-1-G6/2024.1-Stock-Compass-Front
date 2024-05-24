@@ -5,7 +5,7 @@ import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 
 export function ErrorAlert() {
     return (
-        <Alert className="text-start">
+        <Alert className="text-start w-full">
             <TriangleAlert className="h-4 w-4 text-yellow-400" />
             <AlertTitle>Oops!</AlertTitle>
             <AlertDescription>

@@ -1,4 +1,5 @@
 import { DescriptionMark } from "@/components/DescriptionMark/DescriptionMark";
+import { ErrorAlert } from "@/components/ErrorAlert/ErrorAlert";
 import { Card } from "@/components/ui/card";
 import Formatter from "@/utils/formatter";
 
@@ -32,14 +33,19 @@ interface Indicator {
   value: number
 }
 
-async function getIndicatorsSummary(ticker: string): Promise<Indicator[]> {
-  const response = await fetch(`${process.env.STOCK_API}/api/stocks/indicators/${ticker.toUpperCase()}`);
-  if (!response.ok) {
-    throw new Error(`HTTP error! status: ${response.status}`);
-  }
+async function getIndicatorsSummary(ticker: string): Promise<Indicator[] | null> {
+  try {
+    const response = await fetch(`${process.env.STOCK_API}/api/stocks/indicators/${ticker.toUpperCase()}`);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
 
-  const data = await response.json();
-  return [...data.indicatorValueResponseList] as Indicator[];
+    const data = await response.json();
+    return [...data.indicatorValueResponseList] as Indicator[];
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
 }
 
 interface IndicatorsSummaryProps {
@@ -59,7 +65,7 @@ export default async function IndicatorsSummary({
   }
 
   function renderIndicators() {
-    return indicatorsSummary.map((item, index) => (
+    return indicatorsSummary?.map((item, index) => (
       <Card
         key={index + item.indicator}
         className="flex flex-col p-4 rounded-2xl justify-between gap-9"
@@ -76,5 +82,11 @@ export default async function IndicatorsSummary({
   }
 
 
-  return renderIndicators();
+  return (
+    indicatorsSummary ?
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+        {renderIndicators()}
+      </div> :
+      <ErrorAlert />
+  );
 }

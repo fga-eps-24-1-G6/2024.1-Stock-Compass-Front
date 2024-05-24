@@ -25,6 +25,9 @@ const Formatter = {
     currency: (num: number) => {
         return 'R$ ' + num.toFixed(2).toString().replace('.', ',')
     },
+    roundedCurrency: (num: number) => {
+        return 'R$ ' + num.toString().replace('.', ',')
+    },
     shortNumber: (num: number) => {
         const { shortNum, symbol } = abvNum(num);
         return `${shortNum.toFixed(2).toString().replace('.', ',')} ${symbol}`

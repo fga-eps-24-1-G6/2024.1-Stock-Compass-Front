@@ -6,10 +6,21 @@ import {
     CardTitle,
 } from "@/components/ui/card"
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Wallet } from "./Wallet/Wallet";
-import { MonthlyDividends } from "./MonthlyDividends/MonthlyDividends";
+import { Wallet } from "./Wallet";
+import { MonthlyDividends } from "./MonthlyDividends";
+import { Profitability } from "./Profitability";
+import { Transactions } from "./Transactions";
+import { WalletActions } from "./WalletActions";
 import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectLabel,
+    SelectTrigger,
+    SelectValue
+} from "@/components/ui/select";
 
 function SectionCard({ children, id }: { children: React.ReactNode, id?: string }) {
     return (
@@ -21,15 +32,15 @@ function SectionCard({ children, id }: { children: React.ReactNode, id?: string 
 
 export default async function WalletPage({ params }: any) {
     return (
-        <SingleColumn>
-            <div className="w-full sm:w-40 static xl:absolute top-0 right-8 flex flex-col gap-2">
+        <SingleColumn className="relative">
+            <div className="w-full sm:w-40 static xl:absolute top-0 right-0 flex flex-col gap-2">
                 <Select>
                     <SelectTrigger>
                         <SelectValue placeholder="Select a fruit" defaultValue="banana" />
                     </SelectTrigger>
                     <SelectContent>
                         <SelectGroup>
-                            <SelectLabel>Carteira</SelectLabel>
+                            <SelectLabel>Suas Carteiras</SelectLabel>
                             <SelectItem value="apple">Apple</SelectItem>
                             <SelectItem value="banana">Banana</SelectItem>
                             <SelectItem value="blueberry">Blueberry</SelectItem>
@@ -43,8 +54,9 @@ export default async function WalletPage({ params }: any) {
                 </Button>
             </div>
             <SectionCard>
-                <CardHeader>
+                <CardHeader className="flex-row w-full justify-between items-center">
                     <CardTitle>Carteira 1</CardTitle>
+                    <WalletActions />
                 </CardHeader>
 
                 <CardContent>
@@ -67,23 +79,25 @@ export default async function WalletPage({ params }: any) {
                         </TabsList>
                     </CardHeader>
                     <TabsContent value="profitability">
-                        <CardContent className="flex flex-col md:flex-row gap-4 md:gap-0 justify-between">
-                            Profitablity
+                        <CardContent className="h-80">
+                            <Profitability id="" />
                         </CardContent>
                     </TabsContent>
                     <TabsContent value="transactions">
-                        <CardContent className="grid grid-cols-2">
-                            Transactions
+                        <CardContent className="flex flex-col gap-6 items-end">
+                            <Button className="w-40">
+                                Novo Lançamento
+                            </Button>
+                            <Transactions />
                         </CardContent>
                     </TabsContent>
                     <TabsContent value="dividends">
-                        <CardContent>
+                        <CardContent className="h-80">
                             <MonthlyDividends id={""} />
                         </CardContent>
                     </TabsContent>
                 </Tabs>
             </SectionCard>
         </SingleColumn>
-
     )
 }

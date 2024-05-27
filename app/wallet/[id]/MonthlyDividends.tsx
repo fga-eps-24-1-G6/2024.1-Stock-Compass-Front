@@ -73,13 +73,11 @@ export async function MonthlyDividends({ id }: MonthlyDividendsProps) {
 
 
     return (
-        <main className="flex flex-col md:grid md:grid-cols-2 gap-6 text-teal-700">
-            <BarChart
-                data={handlePaymentMonths().frequencies}
-                labels={handlePaymentMonths().months}
-                backgroundColor="rgba(45, 212, 191)"
-                hoverBackgroundColor="rgb(15, 118, 110)"
-            />
-        </main>
+        <BarChart
+            data={handlePaymentMonths().frequencies}
+            labels={handlePaymentMonths().months}
+            backgroundColor="rgba(45, 212, 191)"
+            hoverBackgroundColor="rgb(15, 118, 110)"
+        />
     )
 }

@@ -9,15 +9,31 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { MoveDown, MoveUp } from "lucide-react";
+import { MoveDown, MoveUp, TriangleAlert } from "lucide-react";
 import CompanySummary from "./CompanySummary/CompanySummary";
 import { Loading as CompanySummaryLoading } from "./CompanySummary/Loading";
 import { Dividends } from "./Dividends/Dividends";
 import { Loading as DividendsLoading } from "./Dividends/Loading";
 import IndicatorsSummary from "./IndicatorsSummary/IndicatorsSummary";
-import { Payment, columns } from "./BalanceSheetSummary/Columns";
-import { DataTable } from "../../../components/DataTable/DataTable";
 import { Loading as BalanceSheetLoading } from "./BalanceSheetSummary/Loading";
+import BalanceSheet from "./BalanceSheetSummary/BalanceSheetSummary";
+import Formatter from "@/utils/formatter";
+import Valuation from "./Valuation/Valuation";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+
+interface StockSummary {
+  ticker: string,
+  currentPrice: number,
+  companyName: string,
+  companyId: number,
+  freeFloat: number,
+  tagAlong: number,
+  avgDailyLiquidity: number,
+  categorie: string,
+  variationOneDay: number,
+  variationOneMonth: number,
+  variationTwelveMonths: number,
+}
 
 function SectionCard({
   children,
@@ -33,139 +49,43 @@ function SectionCard({
   );
 }
 
-async function getStockSummary(ticker: string) {
-  return {
-    ticker: "BBAS3",
-    current_price: "R$ 27,91",
-    company_name: "Banco do Brasil",
-    free_float: 63.44,
-    tag_along: 100.0,
-    avg_daily_liquidity: "R$ 59.74 M",
-    categories: ["DIV", "LARGE"],
-    variation_one_day: 8.05,
-    variation_one_month: -12.58,
-    variation_twelve_months: 40.51,
-  };
-}
+async function getStockSummary(ticker: string): Promise<StockSummary> {
+  const response = await fetch(`${process.env.STOCK_API}/api/stocks/stock-summary/${ticker}`, { cache: 'no-store' });
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
 
-async function getData(): Promise<Payment[]> {
-  // Fetch data from your API here.
-  return [
-    {
-      id: "728ed52f",
-      item1: "item",
-      item2: "item",
-      item3: "item",
-      item4: "item",
-      item5: "item",
-      item6: "item",
-      item7: "item",
-      item8: "item",
-    },
-    {
-      id: "728ed52f",
-      item1: "item",
-      item2: "item",
-      item3: "item",
-      item4: "item",
-      item5: "item",
-      item6: "item",
-      item7: "item",
-      item8: "item",
-    },
-    {
-      id: "728ed52f",
-      item1: "item",
-      item2: "item",
-      item3: "item",
-      item4: "item",
-      item5: "item",
-      item6: "item",
-      item7: "item",
-      item8: "item",
-    },
-    {
-      id: "728ed52f",
-      item1: "item",
-      item2: "item",
-      item3: "item",
-      item4: "item",
-      item5: "item",
-      item6: "item",
-      item7: "item",
-      item8: "item",
-    },
-    {
-      id: "728ed52f",
-      item1: "item",
-      item2: "item",
-      item3: "item",
-      item4: "item",
-      item5: "item",
-      item6: "item",
-      item7: "item",
-      item8: "item",
-    },
-    {
-      id: "728ed52f",
-      item1: "item",
-      item2: "item",
-      item3: "item",
-      item4: "item",
-      item5: "item",
-      item6: "item",
-      item7: "item",
-      item8: "item",
-    },
-    {
-      id: "728ed52f",
-      item1: "item",
-      item2: "item",
-      item3: "item",
-      item4: "item",
-      item5: "item",
-      item6: "item",
-      item7: "item",
-      item8: "item",
-    },
-    // ...
-  ];
+  const data = await response.json();
+  return data;
 }
 
 export default async function StockPage({ params }: any) {
-  const stockSummary = await getStockSummary(params.ticker);
-  const data = await getData();
-
-  const renderStockCategories = () => {
-    const stockCategories = [
-      {
-        lable: "large",
-        color: "bg-violet-800",
-      },
-    ];
-
-    return stockCategories.map((item, index) => (
-      <div key={index + item.lable} className="flex gap-2">
-        <p className={`text-xs font-medium ${item.color} p-1 rounded-sm`}>
-          {item.lable.toLocaleUpperCase()}
-        </p>
-      </div>
-    ));
-  };
+  const {
+    ticker,
+    currentPrice,
+    companyName,
+    companyId,
+    freeFloat,
+    tagAlong,
+    avgDailyLiquidity,
+    variationOneDay,
+    variationOneMonth,
+    variationTwelveMonths
+  } = await getStockSummary(params.ticker.toUpperCase());
 
   const renderStockInfo = () => {
     const stockInfo = [
       {
         lable: "FREE FLOAT",
-        value: stockSummary["free_float"].toString() + " %",
+        value: Formatter.percentage(freeFloat),
       },
       {
         lable: "TAG ALONG",
-        value: stockSummary["tag_along"].toString() + " %",
+        value: Formatter.percentage(tagAlong),
       },
       {
         lable: "LIQUIDEZ MÉDIA DIÁRIA",
-        value: stockSummary["avg_daily_liquidity"],
+        value: Formatter.shortCurrency(avgDailyLiquidity),
       },
     ];
 
@@ -181,15 +101,15 @@ export default async function StockPage({ params }: any) {
     const stockVariations = [
       {
         lable: "VAR (1D)",
-        value: stockSummary["variation_one_day"],
+        value: variationOneDay,
       },
       {
         lable: "VAR (1M)",
-        value: stockSummary["variation_one_month"],
+        value: variationOneMonth,
       },
       {
         lable: "VAR (12M)",
-        value: stockSummary["variation_twelve_months"],
+        value: variationTwelveMonths,
       },
     ];
 
@@ -205,11 +125,18 @@ export default async function StockPage({ params }: any) {
           ) : (
             <MoveDown className="w-4 h-4" />
           )}
-          {`${Math.abs(item.value)}%`}
+          {Formatter.percentage(Math.abs(item.value))}
         </span>
       </div>
     ));
   };
+
+  function handleCompanyThumb() {
+    const name = companyName;
+    if (!name) return '';
+
+    return name.slice(0, 2).toUpperCase();
+  }
 
   return (
     <SingleColumn>
@@ -218,17 +145,18 @@ export default async function StockPage({ params }: any) {
           <div className="flex flex-col gap-4">
             <div className="flex flex-col md:flex-row w-full justify-between gap-4">
               <div className="flex gap-4 items-center">
-                <div className="w-16 h-16 rounded-full bg-slate-700"></div>
+                <div className="w-16 h-16 p-6 rounded-full bg-slate-700 flex items-center justify-center text-3xl text-slate-300">
+                  {handleCompanyThumb()}
+                </div>
                 <div className="flex flex-col justify-between">
-                  <CardTitle>{stockSummary["ticker"]}</CardTitle>
+                  <CardTitle>{ticker}</CardTitle>
                   <CardDescription className="text-base">
-                    {stockSummary["company_name"]}
+                    {companyName}
                   </CardDescription>
                 </div>
               </div>
-              <CardTitle>{stockSummary["current_price"]}</CardTitle>
+              <CardTitle>{Formatter.currency(currentPrice)}</CardTitle>
             </div>
-            {renderStockCategories()}
           </div>
         </CardHeader>
 
@@ -241,8 +169,8 @@ export default async function StockPage({ params }: any) {
         </CardContent>
       </SectionCard>
 
-      <Tabs defaultValue="company" className="hidden md:block sticky top-0">
-        <TabsList className="grid w-full grid-cols-4">
+      <Tabs defaultValue="company" className="hidden md:block sticky top-0 z-10">
+        <TabsList className="grid w-full grid-cols-5">
           <TabsTrigger value="company">
             <Link href="#empresa">Empresa</Link>
           </TabsTrigger>
@@ -251,6 +179,9 @@ export default async function StockPage({ params }: any) {
           </TabsTrigger>
           <TabsTrigger value="dividends">
             <Link href="#dividendos">Dividendos</Link>
+          </TabsTrigger>
+          <TabsTrigger value="valuation">
+            <Link href="#valuation">Valuation</Link>
           </TabsTrigger>
           <TabsTrigger value="balanceSheet">
             <Link href="#balanco">Balanço Patrimonial</Link>
@@ -262,9 +193,9 @@ export default async function StockPage({ params }: any) {
         <CardHeader>
           <CardTitle>Empresa</CardTitle>
         </CardHeader>
-        <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <CardContent>
           <Suspense fallback={<CompanySummaryLoading />}>
-            <CompanySummary ticker={params.ticker} />
+            <CompanySummary companyId={companyId} />
           </Suspense>
         </CardContent>
       </SectionCard>
@@ -273,8 +204,8 @@ export default async function StockPage({ params }: any) {
         <CardHeader>
           <CardTitle>Indicadores</CardTitle>
         </CardHeader>
-        <CardContent className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-          <IndicatorsSummary ticker={params.ticker} />
+        <CardContent>
+          <IndicatorsSummary ticker={params.ticker.toUpperCase()} />
         </CardContent>
       </SectionCard>
 
@@ -284,8 +215,17 @@ export default async function StockPage({ params }: any) {
         </CardHeader>
         <CardContent>
           <Suspense fallback={<DividendsLoading />}>
-            <Dividends ticker={params.ticker} />
+            <Dividends ticker={params.ticker.toUpperCase()} />
           </Suspense>
+        </CardContent>
+      </SectionCard>
+
+      <SectionCard id="valuation">
+        <CardHeader>
+          <CardTitle>Valuation</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Valuation ticker={params.ticker.toUpperCase()} />
         </CardContent>
       </SectionCard>
 
@@ -295,7 +235,7 @@ export default async function StockPage({ params }: any) {
         </CardHeader>
         <CardContent>
           <Suspense fallback={<BalanceSheetLoading />}>
-            <DataTable columns={columns} data={data} />
+            <BalanceSheet companyId={companyId} />
           </Suspense>
         </CardContent>
       </SectionCard>

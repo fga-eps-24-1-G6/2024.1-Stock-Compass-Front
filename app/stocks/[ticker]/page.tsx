@@ -9,7 +9,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { MoveDown, MoveUp, TriangleAlert } from "lucide-react";
+import { MoveDown, MoveUp } from "lucide-react";
 import CompanySummary from "./CompanySummary/CompanySummary";
 import { Loading as CompanySummaryLoading } from "./CompanySummary/Loading";
 import { Dividends } from "./Dividends/Dividends";
@@ -19,7 +19,6 @@ import { Loading as BalanceSheetLoading } from "./BalanceSheetSummary/Loading";
 import BalanceSheet from "./BalanceSheetSummary/BalanceSheetSummary";
 import Formatter from "@/utils/formatter";
 import Valuation from "./Valuation/Valuation";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 interface StockSummary {
   ticker: string,

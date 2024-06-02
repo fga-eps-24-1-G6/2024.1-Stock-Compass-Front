@@ -1,4 +1,4 @@
-import { Card } from "../../../../components/ui/card";
+import { Card } from "../../../components/ui/card";
 import { ArrowUp } from "lucide-react";
 interface StocksData {
   id: number;
@@ -42,7 +42,7 @@ export default async function ReturnedStocks({
       <div className="flex flex-grow flex-col">
         <div className="flex justify-between gap-20">
           <p>{item.ticker}</p>
-          <p>{item.lastPrice}</p>
+          <p>{"R$" + item.lastPrice}</p>
         </div>
         <div className="flex justify-between gap-20">
           <p className="text-muted">{item.companyName}</p>

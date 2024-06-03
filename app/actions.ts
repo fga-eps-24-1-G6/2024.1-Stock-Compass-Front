@@ -27,10 +27,10 @@ export async function getStocksByTicker(ticker: string): Promise<StocksData[] | 
     }
 }
 
-export async function getStocksBySector(sector: string): Promise<StocksData[] | null> {
+export async function getStocksBySector(sector: string, category: string): Promise<StocksData[] | null> {
     try {
         const response = await fetch(
-            `${process.env.STOCK_API}/api/stocks/search?sector=${sector}`
+            `${process.env.STOCK_API}/api/stocks/search?category=${category}&sector=${sector}`
         );
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);

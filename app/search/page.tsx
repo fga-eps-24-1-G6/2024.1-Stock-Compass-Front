@@ -43,21 +43,29 @@ interface StocksData {
 export default function SearchPage() {
   const [stocks, setStocks] = useState<StocksData[] | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>();
+  const [sectorQuery, setSectorQuery] = useState<string>();
+  const [categoryQuery, setCategoryQuery] = useState<string>();
+
 
   function handleSearch() {
     if (searchQuery){
       getStocksByTicker(searchQuery).then(data => setStocks(data));
+      setSearchQuery("");
     }
-    else if(sectorQuery){
-      getStocksBySector(sectorQuery).then(data => setStocks(data));
+    else if(sectorQuery && categoryQuery){
+      getStocksBySector(sectorQuery, categoryQuery).then(data => setStocks(data));
+      setSectorQuery("");
+      setCategoryQuery("");
     } 
     else{ 
       setStocks(null);
+      setSectorQuery("");
+      setCategoryQuery("");
+      setSearchQuery("");
     }
   }
 
   const [isTotalActive, setIsTotalActive] = useState(false);
-  const [sectorQuery, setSectorQuery] = useState<string>();
 
   const handleTotalToggle = () => {
     setIsTotalActive(!isTotalActive);
@@ -134,6 +142,21 @@ export default function SearchPage() {
     setIsFuelActive(!isFuelActive);
     setSectorQuery("Petróleo, Gás e Biocombustíveis");
   };
+
+  const [isSmallCapActive, setIsSmallCapActive] = useState(false);
+
+  const handleSmallCapToggle = () => {
+    setIsSmallCapActive(!isSmallCapActive);
+    setCategoryQuery("small");
+  };
+
+
+  const [isLargeCapActive, setIsLargeCapActive] = useState(false);
+
+  const handleLargeCapToggle = () => {
+    setIsLargeCapActive(!isLargeCapActive);
+    setSectorQuery("large");
+  };
   
 
   return (
@@ -155,7 +178,7 @@ export default function SearchPage() {
     <SheetTrigger asChild>
     <Button variant={"outline"}>Filtros</Button>
     </SheetTrigger>
-    <SheetContent  className="flex flex-col gap-5">
+    <SheetContent  className="flex flex-col gap-3">
         Filtrar ações
           <Tabs defaultValue="general" className="hidden md:block sticky">
         <TabsList className="grid w-full grid-cols-2">
@@ -168,7 +191,7 @@ export default function SearchPage() {
         </TabsList>
       </Tabs>
       <Card className="w-full">
-        <CardContent className="flex flex-col gap-3 justify-between">
+        <CardContent className="flex flex-col gap-2 justify-between">
             <div>Setores</div>
             <div className="flex flex-row gap-3">
                 <Button onClick={handleTotalToggle} variant={isTotalActive ? "secondary" : "outline"}>Todos</Button>
@@ -196,6 +219,11 @@ export default function SearchPage() {
             </div>
             <div className="flex flex-row gap-5">
                 <Button onClick={handleFuelToggle} variant={isFuelActive ? "secondary" : "outline"}>Petróleo, Gás e Biocombustíveis</Button>
+            </div>
+            Tamanho
+            <div className="flex flex-row gap-3">
+                <Button onClick={handleLargeCapToggle} variant={isLargeCapActive ? "secondary" : "outline"}>Large Cap</Button>
+                <Button onClick={handleSmallCapToggle} variant={isSmallCapActive ? "secondary" : "outline"}>Small Cap</Button>
             </div>
         </CardContent>
         </Card>

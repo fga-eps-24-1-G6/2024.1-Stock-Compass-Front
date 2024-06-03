@@ -26,3 +26,20 @@ export async function getStocksByTicker(ticker: string): Promise<StocksData[] | 
         return null;
     }
 }
+
+export async function getStocksBySector(sector: string): Promise<StocksData[] | null> {
+    try {
+        const response = await fetch(
+            `${process.env.STOCK_API}/api/stocks/search?sector=${sector}`
+        );
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.log(error);
+        return null;
+    }
+}

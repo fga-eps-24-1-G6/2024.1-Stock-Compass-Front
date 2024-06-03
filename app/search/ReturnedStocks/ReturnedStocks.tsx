@@ -23,7 +23,7 @@ export default function ReturnedStocks({ stocks }: { stocks: StocksData[] | null
   }
 
   return stocks?.map((item, index) => (
-    <Link href={`/stocks/${item.ticker.toLowerCase()}`}>
+    <Link key={index} href={`/stocks/${item.ticker.toLowerCase()}`}>
       <Card key={index} className="flex items-center p-6 rounded-2xl gap-4 hover:bg-muted">
         <div className="w-10 h-10 rounded-full bg-slate-700 flex justify-center items-center p-4 text-slate-300">
           {handleCompanyThumb(item.companyName)}

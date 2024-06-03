@@ -48,20 +48,14 @@ export default function SearchPage() {
 
 
   function handleSearch() {
-    if (searchQuery){
+    if (searchQuery) {
       getStocksByTicker(searchQuery).then(data => setStocks(data));
-      setSearchQuery("");
     }
-    else if(sectorQuery && categoryQuery){
+    else if (sectorQuery && categoryQuery) {
       getStocksBySector(sectorQuery, categoryQuery).then(data => setStocks(data));
-      setSectorQuery("");
-      setCategoryQuery("");
-    } 
-    else{ 
+    }
+    else {
       setStocks(null);
-      setSectorQuery("");
-      setCategoryQuery("");
-      setSearchQuery("");
     }
   }
 
@@ -69,49 +63,84 @@ export default function SearchPage() {
 
   const handleTotalToggle = () => {
     setIsTotalActive(!isTotalActive);
-    setSectorQuery("Todos");
+    if (isTotalActive == true) {
+      setSectorQuery("Todos");
+    }
+    else {
+      setSectorQuery("");
+    }
   };
 
   const [isHealthActive, setIsHealthActive] = useState(false);
 
   const handleHealthToggle = () => {
     setIsHealthActive(!isHealthActive);
-    setSectorQuery("Saúde");
+    if (isHealthActive == true) {
+      setSectorQuery("Saúde");
+    }
+    else {
+      setSectorQuery("");
+    }
   };
 
   const [isPublicUtilityActive, setIsPublicUtilityActive] = useState(false);
 
   const handlePublicUtilityToggle = () => {
     setIsPublicUtilityActive(!isPublicUtilityActive);
-    setSectorQuery("Utilidade Pública");
+    if (isPublicUtilityActive == true) {
+      setSectorQuery("Utilidade Pública");
+    }
+    else {
+      setSectorQuery("");
+    }
   };
 
   const [isIndustrialActive, setIsIndustrialActive] = useState(false);
 
   const handleIndustrialToggle = () => {
     setIsIndustrialActive(!isIndustrialActive);
-    setSectorQuery("Bens Industriais");
+    if (isIndustrialActive == true) {
+      setSectorQuery("Bens Industriais");
+    }
+    else {
+      setSectorQuery("");
+    }
   };
 
   const [isFinancialActive, setIsFinancialActive] = useState(false);
 
   const handleFinancialToggle = () => {
     setIsFinancialActive(!isFinancialActive);
-    setSectorQuery("Financeiro");
+    if (isFinancialActive == true) {
+      setSectorQuery("Financeiro");
+    }
+    else {
+      setSectorQuery("");
+    }
   };
-  
+
   const [isNonCiclicalActive, setIsNonCiclicalActive] = useState(false);
 
   const handleNonCiclicalToggle = () => {
     setIsNonCiclicalActive(!isNonCiclicalActive);
-    setSectorQuery("Consumo não Cíclico");
+    if (isNonCiclicalActive == true) {
+      setSectorQuery("Consumo não Cíclico");
+    }
+    else {
+      setSectorQuery("");
+    }
   };
 
   const [isTelecomunicationActive, setIsTelecomunicationActive] = useState(false);
 
   const handleTelecomunicationToggle = () => {
     setIsTelecomunicationActive(!isTelecomunicationActive);
-    setSectorQuery("Telecomunicações");
+    if (isTelecomunicationActive == true) {
+      setSectorQuery("Telecomunicações");
+    }
+    else {
+      setSectorQuery("");
+    }
   };
 
 
@@ -119,35 +148,60 @@ export default function SearchPage() {
 
   const handleCiclicalToggle = () => {
     setIsCiclicalActive(!isCiclicalActive);
-    setSectorQuery("Consumo Cíclico");
+    if (isCiclicalActive == true) {
+      setSectorQuery("Consumo Cíclico");
+    }
+    else {
+      setSectorQuery("");
+    }
   };
 
   const [isBasicMaterialActive, setIsBasicMaterialActive] = useState(false);
 
   const handleBasicMaterialToggle = () => {
     setIsBasicMaterialActive(!isBasicMaterialActive);
-    setSectorQuery("Materiais Básicos");
+    if (isBasicMaterialActive == true) {
+      setSectorQuery("Materiais Básicos");
+    }
+    else {
+      setSectorQuery("");
+    }
   };
 
   const [isItActive, setIsItActive] = useState(false);
 
   const handleItToggle = () => {
     setIsItActive(!isItActive);
-    setSectorQuery("Tecnologia da Informação");
+    if (isItActive == true) {
+      setSectorQuery("Tecnologia da Informação");
+    }
+    else {
+      setSectorQuery("");
+    }
   };
 
   const [isFuelActive, setIsFuelActive] = useState(false);
 
   const handleFuelToggle = () => {
     setIsFuelActive(!isFuelActive);
-    setSectorQuery("Petróleo, Gás e Biocombustíveis");
+    if (isFuelActive == true) {
+      setSectorQuery("Petróleo, Gás e Biocombustíveis");
+    }
+    else {
+      setSectorQuery("");
+    }
   };
 
   const [isSmallCapActive, setIsSmallCapActive] = useState(false);
 
   const handleSmallCapToggle = () => {
     setIsSmallCapActive(!isSmallCapActive);
-    setCategoryQuery("small");
+    if (isSmallCapActive == true) {
+      setCategoryQuery("small");
+    }
+    else {
+      setSectorQuery("");
+    }
   };
 
 
@@ -155,9 +209,14 @@ export default function SearchPage() {
 
   const handleLargeCapToggle = () => {
     setIsLargeCapActive(!isLargeCapActive);
-    setSectorQuery("large");
+    if (isLargeCapActive == true) {
+      setSectorQuery("large");
+    }
+    else {
+      setSectorQuery("");
+    }
   };
-  
+
 
   return (
     <SingleColumn>
@@ -174,66 +233,66 @@ export default function SearchPage() {
               // value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
-               <Sheet>
-    <SheetTrigger asChild>
-    <Button variant={"outline"}>Filtros</Button>
-    </SheetTrigger>
-    <SheetContent  className="flex flex-col gap-3">
-        Filtrar ações
-          <Tabs defaultValue="general" className="hidden md:block sticky">
-        <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="general">
-            <Link href="#geral">Geral</Link>
-          </TabsTrigger>
-          <TabsTrigger value="indicators">
-            <Link href="#indicadores">Indicadores</Link>
-          </TabsTrigger>
-        </TabsList>
-      </Tabs>
-      <Card className="w-full">
-        <CardContent className="flex flex-col gap-2 justify-between">
-            <div>Setores</div>
-            <div className="flex flex-row gap-3">
-                <Button onClick={handleTotalToggle} variant={isTotalActive ? "secondary" : "outline"}>Todos</Button>
-                <Button onClick={handleHealthToggle} variant={isHealthActive ? "secondary" : "outline"}>Saúde</Button>
-            </div>
-            <div className="flex flex-row gap-3">
-                <Button onClick={handlePublicUtilityToggle} variant={isPublicUtilityActive ? "secondary" : "outline"}>Utilidade Pública</Button>
-                <Button onClick={handleIndustrialToggle} variant={isIndustrialActive ? "secondary" : "outline"}>Bens Industriais</Button>
-            </div>
-            <div className="flex flex-row gap-3">
-                <Button onClick={handleFinancialToggle} variant={isFinancialActive ? "secondary" : "outline"}>Financeiro</Button>
-                <Button onClick={handleNonCiclicalToggle} variant={isNonCiclicalActive ? "secondary" : "outline"}>Consumo não Cíclico</Button>
-            </div>
-            <div className="flex flex-row gap-5">
-                <Button onClick={handleTelecomunicationToggle} variant={isTelecomunicationActive ? "secondary" : "outline"}>Telecomunicações</Button>
-            </div>
-            <div className="flex flex-row gap-5">
-                <Button onClick={handleCiclicalToggle} variant={isCiclicalActive ? "secondary" : "outline"}>Consumo Cíclico</Button>
-            </div>
-            <div className="flex flex-row gap-5">
-                <Button onClick={handleBasicMaterialToggle} variant={isBasicMaterialActive ? "secondary" : "outline"}>Materiais Básicos</Button>
-            </div>
-            <div className="flex flex-row gap-5">
-                <Button onClick={handleItToggle} variant={isItActive ? "secondary" : "outline"}>Tecnologia da Informação</Button>
-            </div>
-            <div className="flex flex-row gap-5">
-                <Button onClick={handleFuelToggle} variant={isFuelActive ? "secondary" : "outline"}>Petróleo, Gás e Biocombustíveis</Button>
-            </div>
-            Tamanho
-            <div className="flex flex-row gap-3">
-                <Button onClick={handleLargeCapToggle} variant={isLargeCapActive ? "secondary" : "outline"}>Large Cap</Button>
-                <Button onClick={handleSmallCapToggle} variant={isSmallCapActive ? "secondary" : "outline"}>Small Cap</Button>
-            </div>
-        </CardContent>
-        </Card>
-        <SheetFooter>
-                <SheetClose asChild>
-                <Button type="submit" onClick={handleSearch}>Aplicar Filtros</Button>
-                </SheetClose>
-            </SheetFooter>
-    </SheetContent>
-    </Sheet>
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button variant={"outline"}>Filtros</Button>
+              </SheetTrigger>
+              <SheetContent className="flex flex-col gap-3">
+                Filtrar ações
+                <Tabs defaultValue="general" className="hidden md:block sticky">
+                  <TabsList className="grid w-full grid-cols-2">
+                    <TabsTrigger value="general">
+                      <Link href="#geral">Geral</Link>
+                    </TabsTrigger>
+                    <TabsTrigger value="indicators">
+                      <Link href="#indicadores">Indicadores</Link>
+                    </TabsTrigger>
+                  </TabsList>
+                </Tabs>
+                <Card className="w-full">
+                  <CardContent className="flex flex-col gap-2 justify-between">
+                    <div>Setores</div>
+                    <div className="flex flex-row gap-3">
+                      <Button onClick={handleTotalToggle} variant={isTotalActive ? "secondary" : "outline"}>Todos</Button>
+                      <Button onClick={handleHealthToggle} variant={isHealthActive ? "secondary" : "outline"}>Saúde</Button>
+                    </div>
+                    <div className="flex flex-row gap-3">
+                      <Button onClick={handlePublicUtilityToggle} variant={isPublicUtilityActive ? "secondary" : "outline"}>Utilidade Pública</Button>
+                      <Button onClick={handleIndustrialToggle} variant={isIndustrialActive ? "secondary" : "outline"}>Bens Industriais</Button>
+                    </div>
+                    <div className="flex flex-row gap-3">
+                      <Button onClick={handleFinancialToggle} variant={isFinancialActive ? "secondary" : "outline"}>Financeiro</Button>
+                      <Button onClick={handleNonCiclicalToggle} variant={isNonCiclicalActive ? "secondary" : "outline"}>Consumo não Cíclico</Button>
+                    </div>
+                    <div className="flex flex-row gap-5">
+                      <Button onClick={handleTelecomunicationToggle} variant={isTelecomunicationActive ? "secondary" : "outline"}>Telecomunicações</Button>
+                    </div>
+                    <div className="flex flex-row gap-5">
+                      <Button onClick={handleCiclicalToggle} variant={isCiclicalActive ? "secondary" : "outline"}>Consumo Cíclico</Button>
+                    </div>
+                    <div className="flex flex-row gap-5">
+                      <Button onClick={handleBasicMaterialToggle} variant={isBasicMaterialActive ? "secondary" : "outline"}>Materiais Básicos</Button>
+                    </div>
+                    <div className="flex flex-row gap-5">
+                      <Button onClick={handleItToggle} variant={isItActive ? "secondary" : "outline"}>Tecnologia da Informação</Button>
+                    </div>
+                    <div className="flex flex-row gap-5">
+                      <Button onClick={handleFuelToggle} variant={isFuelActive ? "secondary" : "outline"}>Petróleo, Gás e Biocombustíveis</Button>
+                    </div>
+                    Tamanho
+                    <div className="flex flex-row gap-3">
+                      <Button onClick={handleLargeCapToggle} variant={isLargeCapActive ? "secondary" : "outline"}>Large Cap</Button>
+                      <Button onClick={handleSmallCapToggle} variant={isSmallCapActive ? "secondary" : "outline"}>Small Cap</Button>
+                    </div>
+                  </CardContent>
+                </Card>
+                <SheetFooter>
+                  <SheetClose asChild>
+                    <Button type="submit" onClick={handleSearch}>Aplicar Filtros</Button>
+                  </SheetClose>
+                </SheetFooter>
+              </SheetContent>
+            </Sheet>
           </div>
           <div>
             <Button onClick={handleSearch}>

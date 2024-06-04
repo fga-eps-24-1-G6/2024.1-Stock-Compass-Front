@@ -70,9 +70,8 @@ export function NewTransaction({ walletId }: NewTransactionProps) {
 
                     <div className="grid grid-cols-2 items-center gap-6 py-4">
                         <div className="flex flex-col gap-2">
-                            <Label htmlFor="price">
-                                Operação
-                            </Label>
+                            <Label htmlFor="price">Operação</Label>
+
                             <Select onValueChange={(e) => setOperation(e)} defaultValue={operation}>
                                 <SelectTrigger>
                                     <SelectValue placeholder="Selecione" defaultValue="COMPRA" />
@@ -87,34 +86,20 @@ export function NewTransaction({ walletId }: NewTransactionProps) {
                         </div>
 
                         <div className="flex flex-col gap-2">
-                            <Label htmlFor="stock">
-                                Ativo
-                            </Label>
-                            <Input
-                                id="stock"
-                                value={stock}
-                                onChange={(e) => setStock(e.target.value)}
-                            />
+                            <Label htmlFor="stock">Ativo</Label>
+                            <Input id="stock" value={stock} onChange={(e) => setStock(e.target.value)} />
                         </div>
 
                         <div className="flex flex-col gap-2">
-                            <Label htmlFor="price">
-                                Preço
-                            </Label>
-                            <Input
-                                id="price"
-                                type="number"
-                                value={price}
+                            <Label htmlFor="price">Preço</Label>
+                            <Input id="price" type="number" value={price}
                                 onChange={(e) => setPrice(parseFloat(e.target.value))}
                             />
                         </div>
 
                         <div className="flex flex-col gap-2">
-                            <Label htmlFor="amount">
-                                Quantidade
-                            </Label>
-                            <Input
-                                id="amount"
+                            <Label htmlFor="amount">Quantidade</Label>
+                            <Input id="amount"
                                 type="number"
                                 value={amount}
                                 onChange={(e) => setAmount(parseInt(e.target.value))}
@@ -146,12 +131,7 @@ export function NewTransaction({ walletId }: NewTransactionProps) {
                     </div>
 
                     <DialogFooter>
-                        <Button
-                            type="submit"
-                            disabled={isDisabled()}
-                        >
-                            Salvar
-                        </Button>
+                        <Button type="submit" disabled={isDisabled()}>Salvar</Button>
                     </DialogFooter>
                 </form>
             </DialogContent>

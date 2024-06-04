@@ -7,20 +7,47 @@ import {
 } from "@/components/ui/card"
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Wallet } from "./Wallet";
-import { MonthlyDividends } from "./MonthlyDividends";
-import { Profitability } from "./Profitability";
 import { Transactions } from "./Transactions";
-import { WalletActions } from "./WalletActions";
-import { Button } from "@/components/ui/button";
-import {
-    Select,
-    SelectContent,
-    SelectGroup,
-    SelectItem,
-    SelectLabel,
-    SelectTrigger,
-    SelectValue
-} from "@/components/ui/select";
+import { ErrorAlert } from "@/components/ErrorAlert/ErrorAlert";
+import { NewTransaction } from "./NewTransaction";
+import { Suspense } from "react";
+import { currentUser } from "@clerk/nextjs/server";
+import { redirect } from "next/navigation";
+
+interface WalletData {
+    wallet: {
+        name: string,
+        externalId: string,
+        stocks: any[],
+        totalValue: number,
+        variation: number
+    },
+    transactions: {
+        id: number,
+        stocks: {
+            ticker: string,
+        },
+        price: number,
+        date: string,
+        amount: number,
+        operation: string
+    }[]
+}
+
+async function getWalletData(id: string): Promise<WalletData | null> {
+    try {
+        const response = await fetch(`${process.env.WALLET_API}/api/transactions/get/wallet/${id}`);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.log(error);
+        return null;
+    }
+}
 
 function SectionCard({ children, id }: { children: React.ReactNode, id?: string }) {
     return (
@@ -31,73 +58,53 @@ function SectionCard({ children, id }: { children: React.ReactNode, id?: string 
 };
 
 export default async function WalletPage({ params }: any) {
-    return (
-        <SingleColumn className="relative">
-            <div className="w-full sm:w-40 static xl:absolute top-0 right-0 flex flex-col gap-2">
-                <Select>
-                    <SelectTrigger>
-                        <SelectValue placeholder="Select a fruit" defaultValue="banana" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        <SelectGroup>
-                            <SelectLabel>Suas Carteiras</SelectLabel>
-                            <SelectItem value="apple">Apple</SelectItem>
-                            <SelectItem value="banana">Banana</SelectItem>
-                            <SelectItem value="blueberry">Blueberry</SelectItem>
-                            <SelectItem value="grapes">Grapes</SelectItem>
-                            <SelectItem value="pineapple">Pineapple</SelectItem>
-                        </SelectGroup>
-                    </SelectContent>
-                </Select>
-                <Button variant="outline" className="w-full">
-                    Nova Carteira
-                </Button>
-            </div>
-            <SectionCard>
-                <CardHeader className="flex-row w-full justify-between items-center">
-                    <CardTitle>Carteira 1</CardTitle>
-                    <WalletActions />
-                </CardHeader>
+    const user = await currentUser();
+    const data = await getWalletData(params.id);
 
-                <CardContent>
-                    <Wallet id={""} />
-                </CardContent>
-            </SectionCard>
-            <SectionCard>
-                <Tabs defaultValue="profitability">
-                    <CardHeader>
-                        <TabsList className="flex overflow-scroll justify-start sm:grid sm:grid-cols-3 sm:overflow-hidden">
-                            <TabsTrigger value="profitability">
-                                Rentabilidade
-                            </TabsTrigger>
-                            <TabsTrigger value="transactions">
-                                Lançamentos
-                            </TabsTrigger>
-                            <TabsTrigger value="dividends">
-                                Proventos
-                            </TabsTrigger>
-                        </TabsList>
+    if (user && user.id != data?.wallet.externalId) redirect('/wallets');
+
+    return (
+        data ?
+            <SingleColumn className="relative">
+                <SectionCard>
+                    <CardHeader className="w-full">
+                        <CardTitle>{data.wallet.name}</CardTitle>
                     </CardHeader>
-                    <TabsContent value="profitability">
-                        <CardContent className="h-80">
-                            <Profitability id="" />
-                        </CardContent>
-                    </TabsContent>
-                    <TabsContent value="transactions">
-                        <CardContent className="flex flex-col gap-6 items-end">
-                            <Button className="w-40">
-                                Novo Lançamento
-                            </Button>
-                            <Transactions />
-                        </CardContent>
-                    </TabsContent>
-                    <TabsContent value="dividends">
-                        <CardContent className="h-80">
-                            <MonthlyDividends id={""} />
-                        </CardContent>
-                    </TabsContent>
-                </Tabs>
-            </SectionCard>
-        </SingleColumn>
+
+                    <CardContent>
+                        <Suspense>
+                            <Wallet
+                                stocks={data.wallet.stocks}
+                                totalValue={data.wallet.totalValue}
+                                variation={data.wallet.variation}
+                            />
+                        </Suspense>
+                    </CardContent>
+                </SectionCard>
+                <SectionCard>
+                    <Tabs defaultValue="transactions">
+                        <CardHeader>
+                            <TabsList className="flex overflow-scroll justify-start sm:grid sm:grid-cols-3 sm:overflow-hidden">
+                                <TabsTrigger value="transactions">
+                                    Lançamentos
+                                </TabsTrigger>
+                            </TabsList>
+                        </CardHeader>
+                        <TabsContent value="transactions">
+                            <CardContent className="flex flex-col gap-6 items-end">
+                                <NewTransaction walletId={params.id} />
+
+                                <Suspense>
+                                    {
+                                        !!data.transactions.length &&
+                                        <Transactions transactions={JSON.parse(JSON.stringify(data.transactions))} walletId={params.id} />
+                                    }
+                                </Suspense>
+                            </CardContent>
+                        </TabsContent>
+                    </Tabs>
+                </SectionCard>
+            </SingleColumn> :
+            <ErrorAlert />
     )
 }

@@ -1,63 +1,53 @@
+'use client'
+
 import { DataTable } from "@/components/DataTable/DataTable";
 import { DoughnutChart } from "@/components/DoughnutChart/DoughnutChart";
+import Formatter from "@/utils/formatter";
 import { ColumnDef } from "@tanstack/react-table";
 import { MoveDown, MoveUp } from "lucide-react";
 
-async function getWalletData(id: string) {
-    return {
-        total: 20000,
-        variation: 7.4,
-        paymentMonths: [
-            {
-                month: "Agosto",
-                frequency: 70.0
-            },
-            {
-                month: "Maio",
-                frequency: 30.0
-            },
-            {
-                month: "Novembro",
-                frequency: 10.0
-            }
-        ]
-    };
+interface WalletItem {
+    ticker: string,
+    amount: number,
+    avgPrice: number,
+    variation: number
 }
 
 interface WalletProps {
-    id: string
-};
+    stocks: WalletItem[],
+    totalValue: number,
+    variation: number
+}
 
-export async function Wallet({ id }: WalletProps) {
-    const {
-        total,
-        variation,
-        paymentMonths,
-    } = await getWalletData(id);
+export function Wallet({
+    totalValue,
+    variation,
+    stocks,
+}: WalletProps) {
+    function handleChartData() {
+        const tickers = stocks.map(item => item.ticker);
+        const amounts = stocks.map(item => item.amount);
+        const totalStocks = amounts.reduce(
+            (accumulator, currentValue) => accumulator + currentValue,
+            0,
+        );
 
-    function handlePaymentMonths() {
-        const formattedPaymentMonths = paymentMonths.sort((a, b) => b.frequency - a.frequency);
-        const months = formattedPaymentMonths.map((i) => i.month);
-        const frequencies = formattedPaymentMonths.map((i) => i.frequency);
-        return { months, frequencies };
+        return { tickers, amounts, totalStocks };
     }
 
-    type WalletItem = {
-        stock: string,
-        avgPrice: number,
-        amount: number,
-        variation: number,
-        dividends: number,
-    }
+    const { tickers, amounts, totalStocks } = handleChartData();
 
-    const header: ColumnDef<WalletItem>[] = [
+    const header: ColumnDef<unknown>[] = [
         {
-            accessorKey: "stock",
+            accessorKey: "ticker",
             header: 'Ação',
         },
         {
             accessorKey: "avgPrice",
             header: 'Preço Médio',
+            cell: ({ row }) => (
+                <div className="">{Formatter.currency(parseFloat(row.getValue("avgPrice")))}</div>
+            ),
         },
         {
             accessorKey: "amount",
@@ -66,153 +56,59 @@ export async function Wallet({ id }: WalletProps) {
         {
             accessorKey: "variation",
             header: 'Rendimento',
+            cell: ({ row }) => {
+                const variation = parseFloat(row.getValue("variation")) * 100
+                return (
+                    <span className={`flex items-center ${variation > 0 ? 'text-teal-400' : 'text-amber-500'}`}>
+                        {variation > 0 ? <MoveUp className="w-4 h-4" /> : <MoveDown className="w-4 h-4" />}
+                        {Formatter.percentage(Math.abs(variation))}
+                    </span>
+                )
+            }
         },
-        {
-            accessorKey: "dividends",
-            header: 'Proventos',
+        // {
+        //     accessorKey: "dividends",
+        //     header: 'Proventos',
+        // }
+    ]
+
+    function renderWalletItems() {
+        if (!stocks.length) {
+            return <div>Parece que voce nao possui nenhum lançamento nessa carteira</div>
         }
-    ]
 
-    const data = [
-        {
-            stock: "TAEE11",
-            avgPrice: 34.5,
-            amount: 58,
-            variation: 6.5,
-            dividends: 145,
-        },
-        {
-            stock: "TAEE11",
-            avgPrice: 34.5,
-            amount: 58,
-            variation: 6.5,
-            dividends: 145,
-        },
-        {
-            stock: "TAEE11",
-            avgPrice: 34.5,
-            amount: 58,
-            variation: 6.5,
-            dividends: 145,
-        },
-        {
-            stock: "TAEE11",
-            avgPrice: 34.5,
-            amount: 58,
-            variation: 6.5,
-            dividends: 145,
-        },
-        {
-            stock: "TAEE11",
-            avgPrice: 34.5,
-            amount: 58,
-            variation: 6.5,
-            dividends: 145,
-        },
-        {
-            stock: "TAEE11",
-            avgPrice: 34.5,
-            amount: 58,
-            variation: 6.5,
-            dividends: 145,
-        },
-        {
-            stock: "TAEE11",
-            avgPrice: 34.5,
-            amount: 58,
-            variation: 6.5,
-            dividends: 145,
-        },
-        {
-            stock: "TAEE11",
-            avgPrice: 34.5,
-            amount: 58,
-            variation: 6.5,
-            dividends: 145,
-        },
-        {
-            stock: "TAEE11",
-            avgPrice: 34.5,
-            amount: 58,
-            variation: 6.5,
-            dividends: 145,
-        },
-        {
-            stock: "TAEE11",
-            avgPrice: 34.5,
-            amount: 58,
-            variation: 6.5,
-            dividends: 145,
-        },
-        {
-            stock: "TAEE11",
-            avgPrice: 34.5,
-            amount: 58,
-            variation: 6.5,
-            dividends: 145,
-        },
-        {
-            stock: "TAEE11",
-            avgPrice: 34.5,
-            amount: 58,
-            variation: 6.5,
-            dividends: 145,
-        },
-        {
-            stock: "TAEE11",
-            avgPrice: 34.5,
-            amount: 58,
-            variation: 6.5,
-            dividends: 145,
-        },
-        {
-            stock: "TAEE11",
-            avgPrice: 34.5,
-            amount: 58,
-            variation: 6.5,
-            dividends: 145,
-        },
-        {
-            stock: "TAEE11",
-            avgPrice: 34.5,
-            amount: 58,
-            variation: 6.5,
-            dividends: 145,
-        },
-        {
-            stock: "TAEE11",
-            avgPrice: 34.5,
-            amount: 58,
-            variation: 6.5,
-            dividends: 145,
-        },
+        return <DataTable columns={header} data={stocks} pageSize={6} />
+    }
 
-    ]
+    function walletChartLabelFunc(context: any) {
+        return Formatter.percentage((context.parsed / totalStocks)*100);
+    }
 
     return (
-        <main className="flex flex-col md:flex-row gap-6 w-full">
+        stocks.length ? <main className="flex flex-col md:flex-row gap-6 w-full">
             <section className="flex flex-col gap-6">
                 <div className="flex justify-between">
                     <p className="text-2xl font-semibold flex justify-start">
-                        R$ 20.000
+                        {Formatter.currency(totalValue)}
                     </p>
                     <span className={`flex items-center text-2xl font-semibold ${variation > 0 ? 'text-teal-400' : 'text-amber-500'}`}>
                         {variation > 0 ? <MoveUp className="w-4 h-4" /> : <MoveDown className="w-4 h-4" />}
-                        {`${Math.abs(variation)}%`}
+                        {Formatter.percentage(Math.abs(variation * 100))}
                     </span>
                 </div>
                 <div className="w-full h-40 md:w-60 md:h-60 lg:w-80 lg:h-80 flex justify-center">
                     <DoughnutChart
-                        data={handlePaymentMonths().frequencies}
-                        labels={handlePaymentMonths().months}
+                        data={amounts}
+                        labels={tickers}
                         showLegend={false}
+                        labelFunc={walletChartLabelFunc}
                     />
                 </div>
             </section>
 
             <section className="w-full">
-                <DataTable columns={header} data={data} pageSize={6}/>
+                {renderWalletItems()}
             </section>
-        </main>
+        </main> : <div>Parece que você não possui nenhum lançamento nessa carteira</div>
     )
 }

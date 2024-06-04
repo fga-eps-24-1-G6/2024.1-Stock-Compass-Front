@@ -46,13 +46,13 @@ const TopBar = () => {
 const SideBar = () => {
   return (
     <div className="hidden md:flex flex-col items-start border border-muted rounded-full gap-2 p-1">
-      <Link className="p-3 rounded-full hover:bg-muted" href={""}>
+      <Link className="p-3 rounded-full hover:bg-muted" href={"/"}>
         <Home className="w-6 h-6" />
       </Link>
-      <Link className="p-3 rounded-full hover:bg-muted" href={""}>
+      <Link className="p-3 rounded-full hover:bg-muted" href={"/search"}>
         <Search className="w-6 h-6" />
       </Link>
-      <Link className="p-3 rounded-full hover:bg-muted" href={""}>
+      <Link className="p-3 rounded-full hover:bg-muted" href={"/wallets"}>
         <WalletMinimal className="w-6 h-6" />
       </Link>
     </div>

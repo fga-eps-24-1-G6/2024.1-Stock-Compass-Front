@@ -1,23 +1,54 @@
 'use client'
 
-import React from "react";
+import React, { useState } from "react";
 import { DataTable } from "../../../components/DataTable/DataTable";
 import { ColumnDef } from "@tanstack/react-table";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
-import { MoreHorizontal, SquarePenIcon, Trash2 } from "lucide-react";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
+import Formatter from "@/utils/formatter";
+import { TransactionActions } from "./TransactionActions";
 
-export function Transactions() {
-    const header: ColumnDef<unknown>[] = [
+interface TransactionsProps {
+    walletId: number,
+    transactions: {
+        id: number,
+        stocks: {
+            ticker: string,
+        },
+        price: number,
+        date: string,
+        amount: number,
+        operation: string
+    }[]
+}
+
+interface TransactionRow {
+    id: number,
+    stock: string,
+    price: number,
+    date: string,
+    amount: number,
+    operation: string
+}
+
+export function Transactions({ walletId, transactions }: TransactionsProps) {
+    const [data, setData] = useState(
+        transactions
+            .map(item => ({
+                ...item,
+                stock: item.stocks.ticker,
+            }))
+            .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+    );
+
+    const header: ColumnDef<TransactionRow>[] = [
         {
             accessorKey: "operation",
             header: 'Operação',
-            cell: ({ row }) => (
-                <div className="text-teal-400 uppercase">{row.getValue("operation")}</div>
-            ),
+            cell: ({ row }) => {
+                const color = row.getValue("operation") == 'COMPRA' ? 'text-teal-400' : 'text-amber-500'
+                return (
+                    <div className={`${color} uppercase`}>{row.getValue("operation")}</div>
+                )
+            },
         },
         {
             accessorKey: "stock",
@@ -29,6 +60,9 @@ export function Transactions() {
         {
             accessorKey: "price",
             header: 'Preço',
+            cell: ({ row }) => (
+                <div className="">{Formatter.currency(parseFloat(row.getValue("price")))}</div>
+            ),
         },
         {
             accessorKey: "amount",
@@ -37,122 +71,29 @@ export function Transactions() {
         {
             accessorKey: "date",
             header: 'Data da operação',
+            cell: ({ row }) => (
+                <div className="">{Formatter.dateFromISO(row.getValue("date"))}</div>
+            ),
         },
         {
             id: "actions",
             enableHiding: false,
             cell: ({ row }) => {
-                const transaction = row.original
+                const transaction = row.original;
 
-                return (
-                    <Dialog>
-                        <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                                <Button variant="ghost" className="h-8 w-8 p-0">
-                                    <span className="sr-only">Open menu</span>
-                                    <MoreHorizontal className="h-4 w-4" />
-                                </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                                <DropdownMenuLabel>Ações</DropdownMenuLabel>
-                                <DialogTrigger asChild>
-
-                                    <DropdownMenuItem
-                                        onClick={() => { }}
-                                        className="flex gap-2"
-                                    >
-                                        <SquarePenIcon className="w-4 h-4" />
-                                        Editar lançamento
-                                    </DropdownMenuItem>
-                                </DialogTrigger>
-                                <DropdownMenuItem
-                                    onClick={() => { }}
-                                    className="flex gap-2 text-rose-500"
-                                >
-                                    <Trash2 className="w-4 h-4" />
-                                    Deletar lançamento
-                                </DropdownMenuItem>
-                            </DropdownMenuContent>
-                        </DropdownMenu>
-
-                        <DialogContent className="sm:max-w-[425px]">
-                            <DialogHeader>
-                                <DialogTitle>Editar carteira</DialogTitle>
-                                <DialogDescription>
-                                    Altere as informções da sua carteira aqui
-                                </DialogDescription>
-                            </DialogHeader>
-                            <div className="grid grid-cols-4 items-center gap-4 py-4">
-                                <Label htmlFor="name" className="text-right">
-                                    Nome
-                                </Label>
-                                <Input
-                                    id="name"
-                                    defaultValue="Pedro Duarte"
-                                    className="col-span-3"
-                                />
-                            </div>
-                            <DialogFooter>
-                                <Button type="submit">Salvar</Button>
-                            </DialogFooter>
-                        </DialogContent>
-                    </Dialog>
-                )
+                return <TransactionActions
+                    walletId={walletId}
+                    transactionId={transaction.id}
+                    currentOperation={transaction.operation}
+                    currentDate={transaction.date}
+                    currentStock={transaction.stock}
+                    currentPrice={transaction.price}
+                    currentAmount={transaction.amount}
+                />
             },
         },
     ]
 
-    const data = [
-        {
-            operation: "compra",
-            stock: 'TAEE11',
-            amount: "58",
-            price: 'R$ 34,56',
-            date: "13/11/2023",
-        },
-        {
-            operation: "compra",
-            stock: 'TAEE11',
-            amount: "58",
-            price: 'R$ 34,56',
-            date: "13/11/2023",
-        },
-        {
-            operation: "compra",
-            stock: 'TAEE11',
-            amount: "58",
-            price: 'R$ 34,56',
-            date: "13/11/2023",
-        },
-        {
-            operation: "compra",
-            stock: 'TAEE11',
-            amount: "58",
-            price: 'R$ 34,56',
-            date: "13/11/2023",
-        },
-        {
-            operation: "compra",
-            stock: 'TAEE11',
-            amount: "58",
-            price: 'R$ 34,56',
-            date: "13/11/2023",
-        },
-        {
-            operation: "compra",
-            stock: 'TAEE11',
-            amount: "58",
-            price: 'R$ 34,56',
-            date: "13/11/2023",
-        },
-        {
-            operation: "compra",
-            stock: 'TAEE11',
-            amount: "58",
-            price: 'R$ 34,56',
-            date: "13/11/2023",
-        }
-    ]
     return (
         <div className="w-full">
             <DataTable columns={header} data={data} />

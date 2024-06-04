@@ -43,6 +43,14 @@ const Formatter = {
         } catch (error) {
             return null;
         }
+    },
+    dateFromISO(dateString: string): string | null {
+        try {
+            const [year, month, day] = dateString.split("T")[0].split("-");
+            return `${day}/${month}/${year}`;
+        } catch (error) {
+            return null;
+        }
     }
 }
 

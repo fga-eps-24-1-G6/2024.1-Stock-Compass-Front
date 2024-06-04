@@ -1,12 +1,16 @@
-import { BriefcaseBusiness, Calendar, Check, DollarSign, Newspaper, CircleHelp } from "lucide-react";
+import { BriefcaseBusiness, Calendar, Check, DollarSign, Newspaper, CircleHelp, WalletMinimal } from "lucide-react";
 
 
-export type badgeVariant = 'check' | 'note' | 'calendar' | 'money' | 'business';
+export type badgeVariant = 'check' | 'note' | 'calendar' | 'money' | 'business' | 'wallet';
 
 const variants = {
     'check': {
         bgColor: 'bg-teal-600',
         icon: <Check className="w-4 h-4 text-teal-400" />
+    },
+    'wallet': {
+        bgColor: 'bg-teal-600',
+        icon: <WalletMinimal className="w-4 h-4 text-teal-400" />
     },
     'note': {
         bgColor: 'bg-rose-600',

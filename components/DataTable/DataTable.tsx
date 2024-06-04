@@ -4,6 +4,7 @@ import {
   ColumnDef,
   flexRender,
   getCoreRowModel,
+  getPaginationRowModel,
   useReactTable,
 } from "@tanstack/react-table";
 
@@ -17,27 +18,41 @@ import {
 } from "@/components/ui/table";
 import { TriangleAlert } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
+import { Button } from "../ui/button";
+import { useState } from "react";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  pageSize?: number
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  pageSize
 }: DataTableProps<TData, TValue>) {
+  const [pagination, setPagination] = useState({
+    pageIndex: 0,
+    pageSize: pageSize || 10
+  });
+  
   const table = useReactTable({
     data,
     columns,
+    state: {
+      pagination
+    },
+    onPaginationChange: setPagination,
     getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
   });
 
   const emptyTable = !table.getRowModel().rows?.length;
 
   return (
     emptyTable ? (
-      <div className="h-96 text-center flex items-center" >
+      <div className="text-center flex items-center" >
         <Alert className="text-start">
           <TriangleAlert className="h-4 w-4 text-yellow-400" />
           <AlertTitle>Oops!</AlertTitle>

@@ -8,7 +8,8 @@ import {
     BarElement,
     Title,
     Tooltip,
-    Legend
+    Legend,
+    ChartDataset
 } from 'chart.js'
 
 ChartJS.register(
@@ -22,19 +23,22 @@ ChartJS.register(
 
 interface BarChartProps {
     data: number[],
-    labels: string[]
+    datasets?: ChartDataset<"bar", (number | [number, number] | null)[]>[],
+    labels: string[],
+    backgroundColor?: string,
+    hoverBackgroundColor?: string
 }
 
-export function BarChart({ data, labels }: BarChartProps) {
+export function BarChart({ data, labels, backgroundColor, hoverBackgroundColor, datasets }: BarChartProps) {
     const barChartData = {
         labels,
-        datasets: [{
+        datasets: datasets ? [...datasets] : [{
             data,
             backgroundColor: [
-                'rgba(113, 113, 122, 1)',
+                backgroundColor || 'rgba(113, 113, 122, 1)',
             ],
             hoverBackgroundColor: [
-                'rgba(228, 228, 231, 1)',
+                hoverBackgroundColor || 'rgba(228, 228, 231, 1)',
             ],
             borderWidth: 0
         }]

@@ -25,13 +25,15 @@ ChartJS.register(
 
 interface DoughnutChartProps {
     data: number[],
-    labels: string[]
+    labels: string[],
+    showLegend?: boolean,
+    labelFunc?: (context: any) => string | void | string[]
 }
 
 type position = "right" | "center" | "left" | "top" | "bottom" | "chartArea" | undefined;
 type align = "center" | "start" | "end" | undefined;
 
-export function DoughnutChart({ data, labels }: DoughnutChartProps) {
+export function DoughnutChart({ data, labels, showLegend, labelFunc }: DoughnutChartProps) {
     const chartData = {
         labels,
         datasets: [{
@@ -49,7 +51,7 @@ export function DoughnutChart({ data, labels }: DoughnutChartProps) {
     const options = {
         plugins: {
             legend: {
-                display: true,
+                display: showLegend,
                 position: 'right' as position,
                 align: 'start' as align,
                 labels: {
@@ -66,7 +68,7 @@ export function DoughnutChart({ data, labels }: DoughnutChartProps) {
             tooltip: {
                 displayColors: false,
                 callbacks: {
-                    label: function (context: any) {
+                    label: labelFunc || function (context: any) {
                         return Formatter.percentage(context.parsed);
                     }
                 }

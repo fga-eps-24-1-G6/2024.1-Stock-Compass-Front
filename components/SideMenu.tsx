@@ -22,19 +22,19 @@ export function SideMenu() {
                 </SignedIn>
 
                 <div className="grid gap-4 py-4">
-                    <Link href={""}>
+                    <Link href={"/"}>
                         <div className="flex gap-2 items-center">
                             <Home className="w-4 h-4" />
                             Tela inicial
                         </div>
                     </Link>
-                    <Link href={""}>
+                    <Link href={"/search"}>
                         <div className="flex gap-2 items-center">
                             <Search className="w-4 h-4" />
                             Pesquisar
                         </div>
                     </Link>
-                    <Link href={""}>
+                    <Link href={"/wallets"}>
                         <div className="flex gap-2 items-center">
                             <WalletMinimal className="w-4 h-4" />
                             Carteiras

@@ -10,7 +10,7 @@ import {
   UserButton,
 } from "@clerk/nextjs";
 import { ThemeProvider } from "@/components/theme-provider";
-import { Home, WalletMinimal, Search } from 'lucide-react';
+import { Home, WalletMinimal, Search, Bitcoin } from 'lucide-react';
 import Link from "next/link";
 import { SideMenu } from "@/components/SideMenu";
 
@@ -54,6 +54,9 @@ const SideBar = () => {
       </Link>
       <Link className="p-3 rounded-full hover:bg-muted" href={"/wallets"}>
         <WalletMinimal className="w-6 h-6" />
+      </Link>
+      <Link className="p-3 rounded-full hover:bg-muted" href={"/crypto"}>
+        <Bitcoin className="w-6 h-6" />
       </Link>
     </div>
   );
